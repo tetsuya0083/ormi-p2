@@ -1,4 +1,4 @@
-name: Java CI/CD with Gradle & EC2 Deploy
+name: Java CI/CD with Gradle & SSM Deploy
 
 on:
   push:
@@ -46,22 +46,27 @@ jobs:
                -d '{"content":"\n❌ Build failed \n🔗 https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' \
                ${{ secrets.DISCORD_WEBHOOK_URL }}
 
-#  deploy:
-#    name: Deploy to EC2 via SSM
-#    needs: build
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - name: Trigger EC2 Deploy Script via SSM
-#        run: |
-#          aws ssm send-command \
-#            --document-name "AWS-RunShellScript" \
-#            --targets "Key=instanceIds,Values=${{ secrets.EC2_INSTANCE_ID }}" \
-#            --parameters 'commands=["sh ~/deploy.sh"]' \
-#            --comment "GitHub Actions deployment" \
-#            --region ${{ secrets.AWS_REGION }} \
-#            --output text
-#        env:
-#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+  deploy:
+    name: Deploy to EC2 via SSM
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger EC2 Deploy Script via SSM
+        # commands에 사용자를 지정하지 않으면 SSM는 root계정을 Default로 명령어를 처리한다.
+        run: |
+          aws ssm send-command \
+          --document-name "AWS-RunShellScript" \
+          --targets "Key=instanceIds,Values=${{ secrets.EC2_INSTANCE_ID }}" \
+          --parameters '{
+          "commands":[
+            "sudo -u ec2-user DISCORD_WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_URL }} bash /home/ec2-user/rpSample/deploy.sh"
+            ]
+          }' \
+          --comment "GitHub Actions deployment" \
+          --region ${{ secrets.AWS_REGION }} \
+          --output text
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
