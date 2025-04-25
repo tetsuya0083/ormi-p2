@@ -14,6 +14,7 @@ cd /home/ec2-user/ormi-p2 || exit 1
 echo "git pull..."
 git pull origin develop
 
+echo "S3_BUCKET: $S3_BUCKET"
 aws s3 cp "s3://$S3_BUCKET/app.jar" "build/libs/app.jar" || exit 1
 JAR_PATH="build/libs/app.jar"
 

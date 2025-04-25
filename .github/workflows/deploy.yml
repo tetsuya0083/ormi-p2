@@ -71,7 +71,7 @@ jobs:
           --targets "Key=instanceIds,Values=${{ secrets.EC2_INSTANCE_ID }}" \
           --parameters '{
           "commands":[
-            "sudo -u ec2-user DISCORD_WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_URL }} bash /home/ec2-user/ormi-p2/deploy.sh"
+            "sudo -u ec2-user DISCORD_WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_URL }} S3_BUCKET=${{ secrets.S3_BUCKET }} bash /home/ec2-user/ormi-p2/deploy.sh"
             ]
           }' \
           --comment "GitHub Actions deployment" \
