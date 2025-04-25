@@ -10,10 +10,12 @@ fi
 
 cd /home/ec2-user/ormi-p2 || exit 1
 
-echo "git pull..."
-git pull origin master
+# no need
+# echo "git pull..."
+# git pull origin develop
 
-JAR_PATH=build/libs/ormi-p2-0.0.1-SNAPSHOT.jar
+aws s3 cp "s3://$S3_BUCKET/app.jar" "build/libs/app.jar" || exit 1
+JAR_PATH="build/libs/app.jar"
 
 if [ ! -f "$JAR_PATH" ]; then
   echo "JAR file not found at $JAR_PATH"
