@@ -10,9 +10,9 @@ fi
 
 cd /home/ec2-user/ormi-p2 || exit 1
 
-# no need
-# echo "git pull..."
-# git pull origin develop
+# need for deploy.sh
+echo "git pull..."
+git pull origin develop
 
 aws s3 cp "s3://$S3_BUCKET/app.jar" "build/libs/app.jar" || exit 1
 JAR_PATH="build/libs/app.jar"
