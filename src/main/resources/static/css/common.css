@@ -1,0 +1,197 @@
+/* Header */
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+    position: relative;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    background-color: #fff;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.logo {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.logo-text {
+    font-family: 'Binggrae', sans-serif;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #000;
+}
+
+.nav-menu {
+    padding-left: 225px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-menu a {
+    display: block;
+    padding: 8px 16px;
+    border-radius: 4px;
+    color: #333;
+    font-size: 0.875rem;
+}
+
+.nav-menu a:hover {
+    color: #555;
+}
+
+/* 로그인 전 */
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+}
+
+.nav-actions a {
+    font-size: 0.75rem;
+}
+.login-btn:hover{
+    background-color: #f7f8fb;
+}
+
+.join-btn {
+    background-color: #000;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+/* 로그인 후 */
+.btn {
+    padding: 8px;
+    border: none;
+    background-color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.notification-btn, .profile-btn {
+    background-color: transparent;
+    color: #333;
+}
+
+.notification-btn img {
+    width: 24px;
+    height: 24px;
+}
+
+.profile-btn img{
+    width:20px;
+    height:20px;
+}
+
+.notification-btn:hover, .profile-btn:hover {
+    color: #007bff;
+}
+
+/* 프로필 클릭시 */
+#profile-dropdown .profile-info{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-bottom:1px solid #F2F4F7;
+}
+
+#profile-dropdown .nickname{
+    color:#344054;
+    font-size:0.85rem;
+    font-weight: bold;
+}
+
+#profile-dropdown .grade{
+    color:#667085;
+    font-size:0.75rem;
+    margin-top: 4px;
+}
+
+#profile-dropdown {
+    display: none;
+}
+
+#profile-dropdown.show {
+    display: block;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: white;
+    border: 1px solid #F2F4F7;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    display: none;
+    flex-direction: column;
+    min-width: 240px;
+    z-index: 1001;
+    overflow: hidden;
+}
+
+.dropdown-menu a {
+    display: flex;
+    padding: 12px 16px;
+    color: #344054;
+    text-decoration: none;
+    width: 100%;
+    align-items: center;
+    gap: 12px;
+}
+
+.dropdown-menu a:last-child{
+    border-top:1px solid #F2F4F7;
+}
+
+.dropdown-menu a img{
+    width:18px;
+    height:18px;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f5f5f5;
+}
+/* Body */
+.content{
+    padding-bottom: 80px;
+}
+
+.container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding:0;
+}
+
+h3.section-title{
+    font-size: 1.125rem;
+    font-weight: bold;
+}
+
+/* Footer */
+.footer{
+    padding:24px 0;
+    border-top:1px solid #ddd;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+}

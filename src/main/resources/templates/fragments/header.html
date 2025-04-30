@@ -1,0 +1,49 @@
+<header class="navbar" th:fragment="header">
+    <div class="container header-content">
+        <h2 class="logo">
+            <a href="/" class="logo-text">냉장고를 부탁해</a>
+        </h2>
+        <nav class="nav-menu">
+            <a th:href="@{/recommend}">요리 추천</a>
+            <a th:href="@{/recipe}">레시피 공유</a>
+            <a th:href="@{/request}">레시피 요청</a>
+            <a th:href="@{/challenge}">요리 수다</a>
+            <a th:href="@{/tip}">자취 꿀팁</a>
+            <a th:href="@{/qna}">요리 Q&A</a>
+        </nav>
+        <div class="nav-actions">
+            <a th:href="@{/login}" class="login-btn">로그인</a>
+            <a th:href="@{/signup}" class="join-btn">회원가입</a>
+        </div>
+        <div class="nav-actions">
+            <button type="button" class="btn profile-btn" id="profile-btn">
+                <img src="/img/user_icon.svg" alt="프로필 아이콘"/>
+            </button>
+            <div class="dropdown-menu" id="profile-dropdown">
+                <div class="profile-info">
+                    <img src="/img/profile_image.svg" alt="프로필 이미지" class="profile-img">
+                    <div class="profile-text">
+                        <div class="nickname">홍길동</div>
+                        <div class="grade">계란을 접수한 자</div>
+                    </div>
+                </div>
+                <a href="/profile">
+                    <img src="/img/profile_user.png" alt="마이페이지 아이콘">
+                    마이페이지
+                </a>
+                <a href="/settings">
+                    <img src="/img/profile_edit.png" alt="내가 작성한 글 아이콘">
+                    내가 작성한 글
+                </a>
+                <a href="/settings">
+                    <img src="/img/profile_bookmark.png" alt="북마크 아이콘">
+                    북마크
+                </a>
+                <a href="/logout">
+                    <img src="/img/profile_logout.png" alt="로그아웃 아이콘">
+                    로그아웃
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
