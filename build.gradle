@@ -25,12 +25,21 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'mysql:mysql-connector-java:8.0.33'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-//	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
+  
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// Spring Cloud AWS Starter
+	implementation platform('io.awspring.cloud:spring-cloud-aws-dependencies:3.0.1')
+	implementation 'io.awspring.cloud:spring-cloud-aws-starter-parameter-store'
+	// MySQL
+	runtimeOnly 'com.mysql:mysql-connector-j'
 }
 
 tasks.named('test') {
