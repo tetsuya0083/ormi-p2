@@ -12,9 +12,13 @@
             <a th:href="@{/qna}">요리 Q&A</a>
         </nav>
         <div class="nav-actions">
-            <a th:href="@{/login}" class="login-btn">로그인</a>
-            <a th:href="@{/signup}" class="join-btn">회원가입</a>
+            <!-- 비로그인 시 보여줄 로그인/회원가입 버튼 -->
+            <span sec:authorize="!isAuthenticated()">
+                <a th:href="@{/login}" class="login-btn">로그인</a>
+                <a th:href="@{/signup}" class="join-btn">회원가입</a>
+            </span>
         </div>
+
         <div class="nav-actions">
             <button type="button" class="btn profile-btn" id="profile-btn">
                 <img src="/img/user_icon.svg" alt="프로필 아이콘"/>
@@ -39,10 +43,13 @@
                     <img src="/img/profile_bookmark.png" alt="북마크 아이콘">
                     북마크
                 </a>
+                <!-- 로그인 시 보여줄 로그아웃 버튼 -->
+                <span sec:authorize="isAuthenticated()">
                 <a href="/logout">
-                    <img src="/img/profile_logout.png" alt="로그아웃 아이콘">
+                <img src="/img/profile_logout.png" alt="로그아웃 아이콘">
                     로그아웃
                 </a>
+                </span>
             </div>
         </div>
     </div>
