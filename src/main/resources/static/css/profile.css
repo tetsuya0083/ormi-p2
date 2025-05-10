@@ -1,0 +1,70 @@
+
+.profile-section {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid #ddd;
+}
+.profile-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #eee;
+}
+.profile-info h2 {
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+.profile-info p {
+    margin: 4px 0;
+    color: #555;
+}
+.stats {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+.btn-group{
+
+}
+.btn-group button {
+    margin-right: 8px;
+    padding: 6px 12px;
+    border: none;
+    background-color: #9f7aea;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.activity {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+}
+.card {
+    width: 48%;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.card h3 {
+    margin-bottom: 3px;
+    padding-bottom: 6px;
+}
+.card ul {
+    list-style: none;
+    padding: 0;
+}
+.card li {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+.card li:last-child {
+    border-bottom: none;
+}

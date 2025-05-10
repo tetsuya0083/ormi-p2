@@ -7,10 +7,55 @@
   <link rel="stylesheet" th:href="@{/css/base.css}">
   <link rel="stylesheet" th:href="@{/css/reset.css}">
   <link rel="stylesheet" th:href="@{/css/common.css}">
+  <!--마이페이지 css -->
+  <link rel="stylesheet" th:href="@{/css/profile.css}">
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
 
+<div class="container">
+  <div class="profile-section">
+    <img th:src="@{${user.getProfileImageUrl()}}" alt="프로필" class="profile-img">
+    <div class="profile-info">
+      <h2 th:text="${user.getNickname()}"></h2>
+      <p th:text="${user.userLevel.displayName}"></p>
+      <p>ID: <span th:text="${user.getLoginId()}"></span></p>
+      <p>이메일: <span th:text="${user.getEmail()}"></span></p>
+      <div class="stats">
+        <span>Posts <span th:text="${user.getPostsCount()}"></span></span>
+        <span>Comments <span th:text="${user.getCommentsCount()}"></span></span>
+        <span>Points <span th:text="${user.getPoints()}"></span></span>
+      </div>
+      <div class="btn-group">
+        <button>내가 쓴 글</button>
+        <button>북마크</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="activity">
+    <div class="card">
+      <h3>작성한 글</h3>
+      <ul>
+        <li><span>재료 기반 요리 추천 게시판</span><span>2개</span></li>
+        <li><span>사용자 레시피 공유 게시판</span><span>1개</span></li>
+        <li><span>레시피 요청 게시판</span><span>11개</span></li>
+        <li><span>요리 수다방 게시판</span><span>10개</span></li>
+        <li><span>자취 꿀 Tip 공유 게시판</span><span>5개</span></li>
+        <li><span>요리 궁금증 Q&A 게시판</span><span>4개</span></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>활동 내역</h3>
+      <ul>
+        <li><span>댓글</span><span th:text="${user.getCommentsCount()}"></span></li>
+        <li><span>좋아요</span></li>
+        <li><span>활동 점수</span><span th:text="${user.getPoints()}"></span></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <div th:replace="fragments/footer :: footer"></div>
 </body>
