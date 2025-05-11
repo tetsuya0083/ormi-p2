@@ -36,4 +36,11 @@ public class UserViewController {
         model.addAttribute("postCounts", postCounts);
         return "profile";
     }
+
+    @GetMapping("/modifyprofile")
+    public String modifyProfile(Model model, @AuthenticationPrincipal User user) {
+        model.addAttribute("user", user);
+
+        return "modifyprofile";
+    }
 }

@@ -68,3 +68,14 @@
 .card li:last-child {
     border-bottom: none;
 }
+
+.btn-save {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
