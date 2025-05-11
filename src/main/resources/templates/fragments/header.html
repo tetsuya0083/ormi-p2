@@ -25,10 +25,12 @@
             </button>
             <div class="dropdown-menu" id="profile-dropdown">
                 <div class="profile-info">
-                    <img src="/img/profile_image.svg" alt="프로필 이미지" class="profile-img">
+                    <img th:src="@{${user.getProfileImageUrl()}}"
+                         style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover;"
+                         alt="프로필 이미지" class="profile-img">
                     <div class="profile-text">
-                        <div class="nickname">홍길동</div>
-                        <div class="grade">계란을 접수한 자</div>
+                        <div class="nickname"><p th:text="${user.getNickname()}"></p></div>
+                        <div class="grade"><p th:text="${user.userLevel.displayName}"></p></div>
                     </div>
                 </div>
                 <a href="/profile">

@@ -1,6 +1,7 @@
 package com.estsoft.ormi_p2.controller;
 
 import com.estsoft.ormi_p2.dto.AddUserRequest;
+import com.estsoft.ormi_p2.repository.UserRepository;
 import com.estsoft.ormi_p2.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,23 +10,24 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
 public class UserController {
     private UserService userService;
+    private UserRepository userRepository;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserRepository userRepository) {
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/user")
@@ -54,4 +56,12 @@ public class UserController {
 
         return "redirect:/login";
     }
+
+    @GetMapping("/api/nickname-check")
+    @ResponseBody
+    public Map<String, Boolean> checkNickname(@RequestParam String nickname) {
+        boolean isAvailable = !userRepository.existsByNickname(nickname);
+        return Map.of("available", isAvailable);
+    }
+
 }
