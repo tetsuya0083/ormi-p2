@@ -1,0 +1,35 @@
+package com.estsoft.ormi_p2.domain;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+@Entity
+@Getter
+@Setter
+@EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor
+@Table(name = "post_keyword")
+public class PostKeyword {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "post_tag_id")
+    private Long postTagId;
+
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
+
+    @ManyToOne
+    @JoinColumn(name = "tag_id", nullable = false)
+    private Tag tag;
+
+    // 생성자
+    public PostKeyword(Post post, Tag tag) {
+        this.post = post;
+        this.tag = tag;
+    }
+}
