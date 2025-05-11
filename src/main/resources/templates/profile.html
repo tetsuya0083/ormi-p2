@@ -37,12 +37,10 @@
     <div class="card">
       <h3>작성한 글</h3>
       <ul>
-        <li><span>재료 기반 요리 추천 게시판</span><span>2개</span></li>
-        <li><span>사용자 레시피 공유 게시판</span><span>1개</span></li>
-        <li><span>레시피 요청 게시판</span><span>11개</span></li>
-        <li><span>요리 수다방 게시판</span><span>10개</span></li>
-        <li><span>자취 꿀 Tip 공유 게시판</span><span>5개</span></li>
-        <li><span>요리 궁금증 Q&A 게시판</span><span>4개</span></li>
+        <li th:each="item : ${postCounts}">
+          <span th:text="${item.category.displayName}"></span>
+          <span th:text="${item.postCount}"></span>개
+        </li>
       </ul>
     </div>
 
