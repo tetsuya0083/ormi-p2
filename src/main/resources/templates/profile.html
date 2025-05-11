@@ -22,7 +22,7 @@
       <p>ID: <span th:text="${user.getLoginId()}"></span></p>
       <p>이메일: <span th:text="${user.getEmail()}"></span></p>
       <div class="stats">
-        <span>Posts <span th:text="${user.getPostsCount()}"></span></span>
+        <span>Posts <span th:text="${totalPostCount}"></span></span>
         <span>Comments <span th:text="${user.getCommentsCount()}"></span></span>
         <span>Points <span th:text="${user.getPoints()}"></span></span>
       </div>

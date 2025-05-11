@@ -51,7 +51,10 @@ public class UserService {
         user.setNickname(request.getNickname());
 
         // 프로필 이미지 수정
-        user.setProfileImageUrl(request.getProfileImageUrl());
+        String profileImageUrl = request.getProfileImageUrl();
+        if(profileImageUrl != null && !profileImageUrl.isEmpty()) {
+            user.setProfileImageUrl(profileImageUrl);
+        }
 
         userRepository.save(user);
 

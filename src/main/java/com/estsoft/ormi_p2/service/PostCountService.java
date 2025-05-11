@@ -31,5 +31,6 @@ public class PostCountService {
             result.add(new CategoryPostCountDto(category, count));
         }
 
-        return result;    }
+        return result;
+    }
 }

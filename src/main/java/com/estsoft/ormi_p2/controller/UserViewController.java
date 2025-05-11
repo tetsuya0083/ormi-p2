@@ -34,6 +34,12 @@ public class UserViewController {
 
         List<CategoryPostCountDto> postCounts = postCountService.getPostCountsByCategory(user.getUserId());
         model.addAttribute("postCounts", postCounts);
+
+        Long totalPostCount = postCounts.stream()
+                .mapToLong(CategoryPostCountDto::getPostCount)
+                .sum();
+
+        model.addAttribute("totalPostCount", totalPostCount);
         return "profile";
     }
 
