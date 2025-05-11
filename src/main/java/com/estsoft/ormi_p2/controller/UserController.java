@@ -7,6 +7,7 @@ import com.estsoft.ormi_p2.repository.UserRepository;
 import com.estsoft.ormi_p2.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,9 +37,14 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    public ResponseEntity<String> signUp(@ModelAttribute AddUserRequest request,
-                                         @RequestParam("profileImage") MultipartFile profileImage)
+    public ResponseEntity<String> signUp(@Valid @ModelAttribute AddUserRequest request,
+                                         @RequestParam("profileImage") MultipartFile profileImage,
+                                         BindingResult result)
     throws IOException {
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest().body("입력값 오류");
+        }
+
         String filename = UUID.randomUUID() + "_" + profileImage.getOriginalFilename();
         Path uploadDir = Paths.get(System.getProperty("user.dir"), "uploads"); // 현재 프로젝트 기준 절대 경로
         Files.createDirectories(uploadDir);
