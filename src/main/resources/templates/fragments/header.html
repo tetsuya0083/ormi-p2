@@ -1,15 +1,22 @@
 <header class="navbar" th:fragment="header">
+    <h1 class="screen-reader-only">냉장고를 부탁해: 자취생들이 집에서 쉽게 할 수 있는 요리 레시피</h1>
     <div class="container header-content">
         <h2 class="logo">
             <a href="/" class="logo-text">냉장고를 부탁해</a>
         </h2>
         <nav class="nav-menu">
-            <a th:href="@{/recommend}">요리 추천</a>
-            <a th:href="@{/recipe}">레시피 공유</a>
-            <a th:href="@{/request}">레시피 요청</a>
-            <a th:href="@{/challenge}">요리 수다</a>
-            <a th:href="@{/tip}">자취 꿀팁</a>
-            <a th:href="@{/qna}">요리 Q&A</a>
+            <a th:href="@{/board/list/recommend}"
+               th:classappend="${category} == 'recommend' ? 'on' : ''">요리 추천</a>
+            <a th:href="@{/board/list/recipe}"
+               th:classappend="${category} == 'recipe' ? 'on' : ''">레시피 공유</a>
+            <a th:href="@{/board/list/request}"
+               th:classappend="${category} == 'request' ? 'on' : ''">레시피 요청</a>
+            <a th:href="@{/board/list/challenge}"
+               th:classappend="${category} == 'challenge' ? 'on' : ''">요리 수다</a>
+            <a th:href="@{/board/list/tip}"
+               th:classappend="${category} == 'tip' ? 'on' : ''">자취 꿀팁</a>
+            <a th:href="@{/board/list/qna}"
+               th:classappend="${category} == 'qna' ? 'on' : ''">요리 Q&A</a>
         </nav>
         <div class="nav-actions">
             <a th:href="@{/login}" class="login-btn">로그인</a>
@@ -19,7 +26,7 @@
             <button type="button" class="btn profile-btn" id="profile-btn">
                 <img src="/img/user_icon.svg" alt="프로필 아이콘"/>
             </button>
-            <div class="dropdown-menu" id="profile-dropdown">
+            <div class="dropdown-mymenu" id="profile-dropdown">
                 <div class="profile-info">
                     <img src="/img/profile_image.svg" alt="프로필 이미지" class="profile-img">
                     <div class="profile-text">

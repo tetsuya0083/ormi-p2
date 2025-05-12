@@ -2,18 +2,27 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta property="og:title" content="냉장고를 부탁해 - 맛있는 요리 레시피와 커뮤니티">
+    <meta property="og:description" content="냉장고를 부탁해 블로그에서 다양한 요리 레시피와 음식 관련 커뮤니티 정보를 만나보세요.">
+    <meta property="og:image" content="이미지 URL">
+    <meta property="og:url" content="페이지 URL">
+
     <title>냉장고를 부탁해 - 커뮤니티</title>
     <!--공통 stylesheet -->
     <link rel="stylesheet" th:href="@{/css/base.css}">
     <link rel="stylesheet" th:href="@{/css/reset.css}">
     <link rel="stylesheet" th:href="@{/css/common.css}">
 
+    <!-- Bootstrap CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
     <!--페이지 stylesheet -->
     <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/card.css}">
 </head>
 <body>
 
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 
 <main class="content">
     <div class="container">
@@ -49,7 +58,9 @@
                         </div>
                         <div class="card-footer">
                             <div class="profile-info">
-                                <img src="/img/profile_image.svg" alt="프로필 이미지" class="profile-img">
+                                <div class="profile-img">
+                                    <img src="/img/profile_image.svg" alt="프로필 이미지" class="profile-img">
+                                </div>
                                 <div class="profile-text">
                                     <div class="nickname">홍길동</div>
                                     <div class="grade">계란을 접수한 자</div>
@@ -372,12 +383,12 @@
             </ul>
         </section>
     </div>
-    <a href="/" class="write-link">
+    <a href="/board/write" class="write-link">
         <img src="/img/write.svg" alt="edit 아이콘"/>글쓰기</a>
 </main>
 
-<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 
-<script src="/js/common.js"></script>
+<script th:src="@{/js/header.js}" defer></script>
 </body>
 </html>

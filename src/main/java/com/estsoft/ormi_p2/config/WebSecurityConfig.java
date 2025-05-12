@@ -1,0 +1,57 @@
+package com.estsoft.ormi_p2.config;
+
+import com.estsoft.ormi_p2.service.UserDetailService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+
+@Configuration
+public class WebSecurityConfig implements WebMvcConfigurer {
+    private UserDetailService userDetailService;
+
+    public WebSecurityConfig(UserDetailService userDetailService) {
+        this.userDetailService = userDetailService;
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations("file:" + System.getProperty("user.dir") + "/uploads/");
+    }
+
+    @Bean
+    public WebSecurityCustomizer configure() {      // 1) 스프링 시큐리티 기능 비활성화
+        return web -> web.ignoring().requestMatchers("/css/**", "/js/**", "/img/**");
+    }
+
+    // 2) 특정 HTTP 요청에 대한 웹 기반 보안 구성
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.authorizeHttpRequests(auth ->              // 인증, 인가 설정
+                        auth.requestMatchers("/", "/login", "/signup", "/user", "/new-post", "/posts", "/api/posts/**").permitAll()
+                                .requestMatchers("/new-article").hasRole("ADMIN")  // ROLE_ADMIN
+                                .anyRequest().authenticated())
+                .formLogin(auth -> auth.loginPage("/login")     // 폼 기반 로그인 설정
+                        .defaultSuccessUrl("/", true))
+                .logout(auth -> auth.logoutSuccessUrl("/login") // 로그아웃 설정
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true))
+                .csrf(AbstractHttpConfigurer::disable);                  // csrf 비활성화
+        return httpSecurity.build();
+    }
+
+
+
+    // 패스워드 인코더로 사용할 빈 등록
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}

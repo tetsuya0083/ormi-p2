@@ -1,3 +1,14 @@
+.screen-reader-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    overflow: hidden;
+}
+
 /* Header */
 .header-content {
     display: flex;
@@ -23,6 +34,7 @@
     left: 0;
     top: 50%;
     transform: translateY(-50%);
+    font-size: 100%;
 }
 
 .logo-text {
@@ -51,26 +63,32 @@
     color: #555;
 }
 
+.nav-menu a.on{
+    color: #7F56D9;
+}
+
 /* 로그인 전 */
 .nav-actions {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
     position: relative;
 }
 
 .nav-actions a {
     font-size: 0.75rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    color: unset;
 }
+
 .login-btn:hover{
     background-color: #f7f8fb;
 }
 
 .join-btn {
     background-color: #000;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
+    color: #fff !important;
 }
 
 /* 로그인 후 */
@@ -85,8 +103,9 @@
 }
 
 .notification-btn, .profile-btn {
-    background-color: transparent;
+    background-color: #f2f4f9;
     color: #333;
+    border-radius: 50%;
 }
 
 .notification-btn img {
@@ -99,12 +118,14 @@
     height:20px;
 }
 
-.notification-btn:hover, .profile-btn:hover {
-    color: #007bff;
-}
-
 /* 프로필 클릭시 */
-#profile-dropdown .profile-info{
+.dropdown-mymenu .profile-img{
+    width:42px;
+    height:42px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.dropdown-mymenu .profile-info{
     display: flex;
     align-items: center;
     gap: 12px;
@@ -112,13 +133,13 @@
     border-bottom:1px solid #F2F4F7;
 }
 
-#profile-dropdown .nickname{
+.dropdown-mymenu .nickname{
     color:#344054;
     font-size:0.85rem;
     font-weight: bold;
 }
 
-#profile-dropdown .grade{
+.dropdown-mymenu .grade{
     color:#667085;
     font-size:0.75rem;
     margin-top: 4px;
@@ -132,7 +153,7 @@
     display: block;
 }
 
-.dropdown-menu {
+.dropdown-mymenu{
     position: absolute;
     top: 60px;
     right: 0;
@@ -147,7 +168,7 @@
     overflow: hidden;
 }
 
-.dropdown-menu a {
+.dropdown-mymenu a {
     display: flex;
     padding: 12px 16px;
     color: #344054;
@@ -157,16 +178,16 @@
     gap: 12px;
 }
 
-.dropdown-menu a:last-child{
+.dropdown-mymenu a:last-child{
     border-top:1px solid #F2F4F7;
 }
 
-.dropdown-menu a img{
+.dropdown-mymenu a img{
     width:18px;
     height:18px;
 }
 
-.dropdown-menu a:hover {
+.dropdown-mymenu a:hover {
     background-color: #f5f5f5;
 }
 /* Body */
@@ -175,23 +196,98 @@
 }
 
 .container {
-    max-width: 1200px;
     width: 100%;
-    margin: 0 auto;
-    padding:0;
+    padding-right:0 !important;
+    padding-left:0 !important;
 }
 
+/* 상세페이지 form */
 h3.section-title{
     font-size: 1.125rem;
     font-weight: bold;
 }
 
+.page-form{
+    padding:40px 0px 120px;
+}
+
+.title-area h1{
+    font-size: 1.125rem;
+}
+
+/* 이미지 업로드 미리보기 UI */
+.image-upload-box {
+    width: 200px;
+    height: 200px;
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+    background-color: #f9f9f9;
+    position: relative;
+}
+
+.image-upload-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-upload-box::after {
+    content: '+';
+    font-size: 3rem;
+    color: #aaa;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    transition: all 0.3s ease;
+}
+
+.image-upload-box.has-image::after {
+    content: '';
+}
+
+#imageInput {
+    display: none;
+}
+
+/*  작성 버튼 */
+.write-link{
+    position: fixed;
+    bottom: 6rem;
+    right: 2rem;
+    background-color: #7F56D9;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.write-link:hover{
+    transform:scale(1.04);
+    color:white;
+}
+
+.filter-area select{
+    width:120px;
+    margin-left: auto;
+}
+
 /* Footer */
 .footer{
-    padding:24px 0;
-    border-top:1px solid #ddd;
+    padding: 24px 0;
+    border-top: 1px solid #ddd;
     position: fixed;
     bottom: 0;
     width: 100%;
     background-color: white;
+    z-index: 10;
 }
