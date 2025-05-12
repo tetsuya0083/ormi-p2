@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내가 작성한 글</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/reset.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+
+    <!-- Bootstrap CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!--페이지 stylesheet -->
+    <link rel="stylesheet" th:href="@{/css/card.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="content">
+    <div class="container">
+        <section class="banner">
+            <div class="banner-inner"></div>
+        </section>
+
+        <section class="popular-posts">
+            <h3 class="section-title">내가 작성한 글</h3>
+            <div class="cards-container">
+                <div class="card" th:each="post, loop : ${paging}">
+                    <a th:href="@{'/posts/' + ${post.id}}" class="card-link">
+                        <div class="card-thumb">
+                            <img th:src="${post.thumbnailUrl}" alt="썸네일" />
+                            <span class="card-category" th:text="${post.category.displayName}">카테고리</span>
+                        </div>
+                        <div class="card-content">
+                            <h3 class="card-title" th:text="${post.title}">제목</h3>
+                            <p class="card-desc" th:text="${post.content}">내용 요약</p>
+                            <div class="post-stats">
+                                <span class="date" th:text="${post.createdAt}"></span>
+                                <span class="views">좋아요 0 · 댓글 수 0</span>
+                            </div>
+                            <div class="card-tags">
+                                <span class="tag" th:each="tag : ${post.tags}" th:text="${tag}">#태그</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="profile-info">
+                                <img th:src="${post.profileImageUrl}" alt="프로필 이미지" class="profile-img">
+                                <div class="profile-text">
+                                    <div class="nickname" th:text="${post.nickname}"></div>
+                                    <div class="grade" th:text="${post.userGrade}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <button class="bookmark-btn" type="button">
+                        <!--                        <img th:src="${post.bookmarked} ? '/img/card_bookmark_on.png' : '/img/card_bookmark.png'" alt="북마크 이미지">-->
+                        <img src="/img/card_bookmark_on.png" alt="썸네일 북마크 이미지">
+                    </button>
+                </div>
+            </div>
+
+        </section>
+        <div th:if="${!paging.isEmpty()}">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{|?page=${(paging.number)-1}|}">
+                        <span>이전</span>
+                    </a>
+                </li>
+                <li th:each="page: ${#numbers.sequence(0, (paging.totalPages)-1)}"
+                    th:if="${page >= (paging.number)-5 and page <= paging.number+5}"
+                    th:classappend="${page == paging.number} ? 'active'"
+                    class="page-item">
+                    <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
+                </li>
+                <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+                    <a class="page-link" th:href="@{|?page=${paging.number+1}|}">
+                        <span>다음</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <a th:href="@{/new-post}" class="write-link">
+        <img src="/img/write.svg" alt="edit 아이콘"/>글쓰기</a>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/header.js}" defer></script>
+</body>
+</html>
