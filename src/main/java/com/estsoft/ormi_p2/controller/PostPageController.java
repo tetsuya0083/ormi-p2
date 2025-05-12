@@ -5,12 +5,15 @@ import com.estsoft.ormi_p2.domain.Post;
 import com.estsoft.ormi_p2.domain.User;
 import com.estsoft.ormi_p2.dto.PostViewResponse;
 import com.estsoft.ormi_p2.service.PostService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -45,23 +48,6 @@ public class PostPageController {
         return "newPost";
     }
 
-    // 게시글 저장 (POST)
-//    @PostMapping("/new-post")
-//    public String savePost(@RequestParam String title,
-//                           @RequestParam String content,
-//                           @RequestParam String category,
-//                           @RequestParam String difficulty,
-//                           @RequestParam(required = false) String tagString,
-//                           @RequestParam(required = false) MultipartFile image,
-//                           Model model) {
-//        try {
-//            Post savedPost = postService.savePost(title, content, category, difficulty, tagString, image);
-//            return "redirect:/posts"; // 게시글 목록 페이지로 이동
-//        } catch (Exception e) {
-//            model.addAttribute("error", "게시글 저장에 실패했습니다.");
-//            return "newPost"; // 다시 작성 페이지로
-//        }
-//    }
 
     // 게시글 목록 페이지 (GET)
     @GetMapping("/posts/list")
@@ -84,4 +70,22 @@ public class PostPageController {
         return "postList";  // html 페이지
     }
 
+    @GetMapping("/myPosts")
+    public String showMyPosts(Model model, @AuthenticationPrincipal User user,
+                              @RequestParam(value="page", defaultValue="0") int page) {
+        List<PostViewResponse> myPostList = postService.getPostsByUser(user)
+                .stream()
+                .sorted(Comparator.comparing(Post::getCreatedAt).reversed()) // 최신순 정렬
+                .limit(3)
+                .map(PostViewResponse::new)
+                .toList();
+
+        model.addAttribute("myPosts", myPostList);
+        model.addAttribute("user", user);
+
+        Page<PostViewResponse> paging = postService.getPostsByUserId(user.getUserId(), page);
+        model.addAttribute("paging", paging);;
+
+        return "myPosts";
+    }
 }

@@ -2,9 +2,13 @@ package com.estsoft.ormi_p2.service;
 
 import com.estsoft.ormi_p2.domain.*;
 import com.estsoft.ormi_p2.dto.AddPostRequest;
-import com.estsoft.ormi_p2.exception.NotExistsIdException;
+import com.estsoft.ormi_p2.dto.PostViewResponse;
 import com.estsoft.ormi_p2.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,7 +19,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -169,6 +172,18 @@ public class PostService {
 
     public List<Post> getAllPosts() {
         return postRepository.findAll();
+    }
+
+    public List<Post> getPostsByUser(User user) {
+        return postRepository.findAllByUser(user);
+    }
+
+    public Page<PostViewResponse> getPostsByUserId(Long userId, int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createdAt"));
+
+        Pageable pageable = PageRequest.of(page, 3, Sort.by(sorts));
+        return postRepository.findByUserId(userId, pageable);
     }
 
     public List<Tag> processTags(List<String> tagStrings) {

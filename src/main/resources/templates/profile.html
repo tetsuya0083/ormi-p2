@@ -29,7 +29,9 @@
           <span>Points <span th:text="${user.getPoints()}"></span></span>
         </div>
         <div class="btn-group">
-          <button>내가 쓴 글</button>
+          <a th:href="@{'/myPosts'}">
+            <button>내가 쓴 글</button>
+          </a>
           <button>북마크</button>
         </div>
       </div>
