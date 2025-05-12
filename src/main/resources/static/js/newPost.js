@@ -143,9 +143,6 @@ $(document).ready(function () {
                 alert('난이도를 선택해 주세요.');
                 return;
             }
-            formData.append('difficulty', selectedDifficulty.toUpperCase());
-        } else {
-            formData.delete('difficulty');
         }
 
 

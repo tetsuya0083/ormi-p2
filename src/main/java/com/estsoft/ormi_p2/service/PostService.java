@@ -80,13 +80,12 @@ public class PostService {
 
     @Transactional
     public Post savePost(String title, String content, String category,
-                         String difficulty, String tagString, MultipartFile image) {
+                         String difficulty, String tagString, MultipartFile image,
+                         User user) {
         Category categoryEnum = Category.valueOf(category.toUpperCase());
         Difficulty difficultyEnum = processDifficulty(categoryEnum, difficulty);
 
         List<Tag> tagList = processTags(Collections.singletonList(tagString));
-
-        User user = getUserInfo();
 
         Post post = new Post(title, content, categoryEnum, difficultyEnum, tagList, user);
         Post savedPost = postRepository.save(post);
@@ -183,8 +182,4 @@ public class PostService {
         return tagList;
     }
 
-    private User getUserInfo() {
-        return userRepository.findById(1L)
-                .orElseThrow(() -> new NotExistsIdException(1L));
-    }
 }

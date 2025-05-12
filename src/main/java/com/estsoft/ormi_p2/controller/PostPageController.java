@@ -46,22 +46,22 @@ public class PostPageController {
     }
 
     // 게시글 저장 (POST)
-    @PostMapping("/new-post")
-    public String savePost(@RequestParam String title,
-                           @RequestParam String content,
-                           @RequestParam String category,
-                           @RequestParam String difficulty,
-                           @RequestParam(required = false) String tagString,
-                           @RequestParam(required = false) MultipartFile image,
-                           Model model) {
-        try {
-            Post savedPost = postService.savePost(title, content, category, difficulty, tagString, image);
-            return "redirect:/posts"; // 게시글 목록 페이지로 이동
-        } catch (Exception e) {
-            model.addAttribute("error", "게시글 저장에 실패했습니다.");
-            return "newPost"; // 다시 작성 페이지로
-        }
-    }
+//    @PostMapping("/new-post")
+//    public String savePost(@RequestParam String title,
+//                           @RequestParam String content,
+//                           @RequestParam String category,
+//                           @RequestParam String difficulty,
+//                           @RequestParam(required = false) String tagString,
+//                           @RequestParam(required = false) MultipartFile image,
+//                           Model model) {
+//        try {
+//            Post savedPost = postService.savePost(title, content, category, difficulty, tagString, image);
+//            return "redirect:/posts"; // 게시글 목록 페이지로 이동
+//        } catch (Exception e) {
+//            model.addAttribute("error", "게시글 저장에 실패했습니다.");
+//            return "newPost"; // 다시 작성 페이지로
+//        }
+//    }
 
     // 게시글 목록 페이지 (GET)
     @GetMapping("/posts/list")
