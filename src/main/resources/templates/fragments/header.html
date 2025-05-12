@@ -4,12 +4,18 @@
             <a href="/" class="logo-text">냉장고를 부탁해</a>
         </h2>
         <nav class="nav-menu">
-            <a th:href="@{/recommend}">요리 추천</a>
-            <a th:href="@{/recipe}">레시피 공유</a>
-            <a th:href="@{/request}">레시피 요청</a>
-            <a th:href="@{/challenge}">요리 수다</a>
-            <a th:href="@{/tip}">자취 꿀팁</a>
-            <a th:href="@{/qna}">요리 Q&A</a>
+            <a th:href="@{/board/list/recommend}"
+               th:classappend="${category} == 'recommend' ? 'on' : ''">요리 추천</a>
+            <a th:href="@{/board/list/recipe}"
+               th:classappend="${category} == 'recipe' ? 'on' : ''">레시피 공유</a>
+            <a th:href="@{/board/list/request}"
+               th:classappend="${category} == 'request' ? 'on' : ''">레시피 요청</a>
+            <a th:href="@{/board/list/challenge}"
+               th:classappend="${category} == 'challenge' ? 'on' : ''">요리 수다</a>
+            <a th:href="@{/board/list/tip}"
+               th:classappend="${category} == 'tip' ? 'on' : ''">자취 꿀팁</a>
+            <a th:href="@{/board/list/qna}"
+               th:classappend="${category} == 'qna' ? 'on' : ''">요리 Q&A</a>
         </nav>
         <div class="nav-actions">
             <!-- 비로그인 시 보여줄 로그인/회원가입 버튼 -->
@@ -23,7 +29,7 @@
             <button type="button" class="btn profile-btn" id="profile-btn">
                 <img src="/img/user_icon.svg" alt="프로필 아이콘"/>
             </button>
-            <div class="dropdown-menu" id="profile-dropdown">
+            <div class="dropdown-mymenu" id="profile-dropdown">
                 <div class="profile-info">
                     <img th:src="@{${user.profileImageUrl}}"
                          style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover;"
@@ -41,7 +47,7 @@
                     <img src="/img/profile_edit.png" alt="내가 작성한 글 아이콘">
                     내가 작성한 글
                 </a>
-                <a href="/settings">
+                <a th:href="@{/bookmarks}">
                     <img src="/img/profile_bookmark.png" alt="북마크 아이콘">
                     북마크
                 </a>

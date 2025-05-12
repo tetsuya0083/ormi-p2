@@ -1,0 +1,145 @@
+<!-- src/main/resources/templates/bookmark.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <title>북마크한 글</title>
+  <link rel="stylesheet" th:href="@{/css/base.css}"/>
+  <link rel="stylesheet" th:href="@{/css/common.css}"/>
+  <link rel="stylesheet" th:href="@{/css/bookmark.css}"/>
+</head>
+<body>
+<header th:replace="fragments/header :: header"></header>
+
+<main class="content">
+  <div class="container">
+
+    <!-- 검색 & 카테고리 -->
+    <section class="controls">
+      <form th:action="@{/bookmarks}" method="get">
+
+        <!-- ① 검색창 -->
+        <div class="search-group">
+          <input
+                  type="text"
+                  name="keyword"
+                  th:value="${keyword}"
+                  placeholder="제목·키워드·태그 검색"
+                  class="search-box"/>
+        </div>
+
+        <!-- ② 카테고리 -->
+        <div class="category-group">
+          <label for="category">카테고리</label>
+          <div class="select-wrapper">
+            <select
+                    id="category"
+                    name="category"
+                    class="category-select">
+              <option value="" th:selected="${category == null}">
+                전체 카테고리
+              </option>
+              <option
+                      th:each="cat : ${categories}"
+                      th:value="${cat.name()}"
+                      th:text="${cat.displayName}"
+                      th:selected="${cat == category}">
+              </option>
+            </select>
+          </div>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- 제목 -->
+    <h3 class="section-title">북마크한 글</h3>
+
+    <!-- 카드 그리드 -->
+    <section class="cards-container">
+      <div class="card" th:each="post : ${posts.content}">
+        <a th:href="@{/posts/{id}(id=${post.postId})}" class="card-link">
+          <div class="card-thumb">
+            <img th:src="@{${post.images[0]?.imageUrl}}" alt="썸네일"/>
+            <span class="card-category" th:text="${post.category.displayName}">카테고리</span>
+          </div>
+          <div class="card-content">
+            <h3 class="card-title" th:text="${post.title}">제목</h3>
+            <p class="card-desc" th:text="${post.content}">내용 요약</p>
+            <div class="post-stats">
+              <span th:text="${#dates.format(post.createdAt,'yyyy.MM.dd')}">2025.04.24</span>
+              <span>좋아요 <span th:text="${post.likesCount}">0</span></span>
+              <span>댓글 <span th:text="${post.commentsCount}">0</span></span>
+            </div>
+            <div class="card-tags">
+                <span class="tag"
+                      th:each="tg : ${post.tags}"
+                      th:text="'#' + ${tg.name}">#태그</span>
+            </div>
+          </div>
+        </a>
+        <button type="button" class="bookmark-btn">
+          <img th:src="@{/img/card_bookmark_on.png}" alt="북마크"/>
+        </button>
+      </div>
+    </section>
+
+    <!-- 페이징 -->
+    <!-- 페이징 -->
+    <section class="pagination-container">
+      <div class="pagination">
+        <!-- Prev 버튼 -->
+        <a
+                th:if="${posts.hasPrevious()}"
+                th:href="@{/bookmarks(page=${posts.number - 1}, size=${posts.size}, category=${category}, keyword=${keyword})}"
+                class="page-link"
+        >
+          ← Prev
+        </a>
+        <span th:unless="${posts.hasPrevious()}" class="page-link disabled">← Prev</span>
+
+        <!-- 페이지 번호 (총 페이지 수에 따라 1~10 범위에서 노출) -->
+        <span th:each="i : ${#numbers.sequence(1, posts.totalPages > 10 ? 10 : posts.totalPages)}">
+      <a
+              th:if="${i != posts.number + 1}"
+              th:href="@{/bookmarks(page=${i - 1}, size=${posts.size}, category=${category}, keyword=${keyword})}"
+              class="page-number"
+              th:text="${i}"
+      ></a>
+      <span
+              th:if="${i == posts.number + 1}"
+              class="page-number active"
+              th:text="${i}"
+      ></span>
+    </span>
+
+        <!-- Next 버튼 -->
+        <a
+                th:if="${posts.hasNext()}"
+                th:href="@{/bookmarks(page=${posts.number + 1}, size=${posts.size}, category=${category}, keyword=${keyword})}"
+                class="page-link"
+        >
+          Next →
+        </a>
+        <span th:unless="${posts.hasNext()}" class="page-link disabled">Next →</span>
+      </div>
+
+      <!-- 오른쪽: n개씩 보기 -->
+      <div class="page-size-select">
+        <select name="size" onchange="location.href=this.value">
+          <option
+                  th:each="s : ${sizes}"
+                  th:value="@{/bookmarks(page=0, size=${s}, category=${category}, keyword=${keyword})}"
+                  th:selected="${s == posts.size}"
+                  th:text="${s} + '개씩 보기'"
+          ></option>
+        </select>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+<script src="/js/common.js"></script>
+</body>
+</html>
