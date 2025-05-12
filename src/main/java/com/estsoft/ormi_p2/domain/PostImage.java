@@ -23,14 +23,21 @@ public class PostImage {
     @Column(nullable = true)
     private boolean representImageYn;
 
-    @Column(nullable = false)
+    @Column(name = "image_url")
     private String imageUrl;
 
     public static PostImage of(Post post, String imageUrl, boolean isRepresentative) {
         return PostImage.builder()
                 .post(post)
                 .imageUrl(imageUrl)
-                .representImageYn(isRepresentative)
+                .representImageYn(isRepresentative)  // String 대신 boolean
                 .build();
     }
+
+    public PostImage(Post post, String imageUrl, boolean representImageYn) {  // constructor도 수정
+        this.post = post;
+        this.imageUrl = imageUrl;
+        this.representImageYn = representImageYn;
+    }
+
 }

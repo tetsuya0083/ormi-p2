@@ -88,7 +88,7 @@ public class Post {
         this.category = category;
         this.difficulty = difficulty;
         this.postKeywords = tags != null
-                ? tags.stream().map(tag -> new PostKeyword(this, tag)).collect(Collectors.toList())
+                ? tags.stream().map(tag -> new PostKeyword(this, tag, 1L)).collect(Collectors.toList())
                 : new ArrayList<>();
         this.user = user;
     }
@@ -101,7 +101,7 @@ public class Post {
         this.difficulty = difficulty;
         if (tags != null) {
             for (Tag tag : tags) {
-                this.postKeywords.add(new PostKeyword(this, tag));
+                this.postKeywords.add(new PostKeyword(this, tag, 1L));
             }
         }
         this.isPublic = isPublic;

@@ -1,9 +1,7 @@
 package com.estsoft.ormi_p2.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
@@ -11,13 +9,18 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Setter
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "post_keyword")
+@Builder
 public class PostKeyword {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_tag_id")
     private Long postTagId;
+
+    @Column(name = "keyword_id", nullable = false)
+    private Long keywordId;
 
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
@@ -28,8 +31,17 @@ public class PostKeyword {
     private Tag tag;
 
     // 생성자
-    public PostKeyword(Post post, Tag tag) {
+    public PostKeyword(Post post, Tag tag, Long keywordId) {
         this.post = post;
         this.tag = tag;
+        this.keywordId = keywordId;
     }
+
+//    // 생성자: 빌더를 통해 객체 생성
+//    public static PostKeyword create(Post post, Tag tag) {
+//        return PostKeyword.builder()
+//                .post(post)
+//                .tag(tag)
+//                .build();
+//    }
 }

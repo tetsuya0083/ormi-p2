@@ -1,0 +1,143 @@
+
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 24px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    position: relative;
+}
+
+.card-link {
+    color: inherit;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.card-thumb {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+}
+
+.card-thumb > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.card-thumb > img:hover{
+    transform: scale(1.05);
+}
+
+.card-footer .profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.card-category {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.bookmark-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background-color: transparent;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.bookmark-btn:hover {
+    transform: scale(1.08);
+}
+
+.bookmark-btn img{
+    width:24px;
+}
+
+.card-content {
+    padding: 1.6rem;
+    flex: 1;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    margin: 0.2rem 0 0.4rem;
+    color: #333;
+}
+
+.card-desc {
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.4;
+    margin-bottom: 0.6rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.post-stats {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 0.8rem;
+    color: #999;
+    margin-bottom: 8px;
+}
+
+.card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.tag {
+    font-size: 0.85rem;
+    color: #6941C6;
+}
+
+.card-footer {
+    padding: 0.6rem 1rem;
+    border-top: 1px solid #f0f0f0;
+    background-color: white;
+}
+
+.card-footer .profile-info{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+}
+
+.card-footer .profile-info .nickname{
+    color:#344054;
+    font-size:0.85rem;
+    font-weight: bold;
+}
+
+.card-footer .profile-info .grade{
+    color:#667085;
+    font-size:0.75rem;
+    margin-top: 4px;
+}

@@ -3,18 +3,27 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta property="og:title" content="냉장고를 부탁해 - 맛있는 요리 레시피와 커뮤니티">
+    <meta property="og:description" content="냉장고를 부탁해 블로그에서 다양한 요리 레시피와 음식 관련 커뮤니티 정보를 만나보세요.">
+    <meta property="og:image" content="이미지 URL">
+    <meta property="og:url" content="페이지 URL">
+
     <title>냉장고를 부탁해 - 커뮤니티</title>
     <!--공통 stylesheet -->
     <link rel="stylesheet" th:href="@{/css/base.css}">
     <link rel="stylesheet" th:href="@{/css/reset.css}">
     <link rel="stylesheet" th:href="@{/css/common.css}">
 
+    <!-- Bootstrap CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
     <!--페이지 stylesheet -->
     <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/card.css}">
 </head>
 <body>
 
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 
 <main class="content">
     <div class="container">
@@ -25,360 +34,63 @@
         <section class="popular-posts">
             <h3 class="section-title">인기글</h3>
             <div class="cards-container">
-                <!-- 인기글 반복 영역 예시 -->
-                <div class="card">
-                    <a href="/posts/1" class="card-link">
+                <div class="card" th:each="post : ${likedPosts}">
+                    <a th:href="@{'/posts/' + ${post.id}}" class="card-link">
                         <div class="card-thumb">
-                            <img src="https://cdn.pixabay.com/photo/2014/12/15/13/40/spaghetti-569067_1280.jpg" alt="썸네일" />
-                            <span class="card-category">재료 기반 요리 추천</span>
+                            <img th:src="${post.thumbnailUrl}" alt="썸네일" />
+                            <span class="card-category" th:text="${post.category.displayName}">카테고리</span>
                         </div>
                         <div class="card-content">
-                            <h3 class="card-title">김과 해산물을 사용한 냉파스타</h3>
-                            <p class="card-desc">신안군의 특산물인 대하(왕새우), 전복 낙지, 김, 마늘, 양파, 땅콩 등을 활용하여 만든 ‘김과 해산물을 사용한 냉파스타’입니다.
-                                전국에서 유일하게 지주식 김 양식을 하는 신안의 깨끗하고 담백한 김 신선하고 맛 좋은 해산물이 조화롭게 어우러지며 입맛을 돋우는 냉파스타 요리입니다.
-                                해당 레시피는 신안군 [신안천일염 및 농수특산물 활용 레시피 등록홍보 사업]의 일환으로 이수복 셰프가 개발하였습니다.
-                                *음식 사진 및 조리 과정 사진은 레시피를 재현하는 과정에서 촬영하였으므로 실제 원작자가 만든 음식과 일부 다른 부분이 있을 수 있습니다.</p>
+                            <h3 class="card-title" th:text="${post.title}">제목</h3>
+                            <p class="card-desc" th:text="${post.content}">내용 요약</p>
                             <div class="post-stats">
-                                <span class="date">2025.04.24</span>
-                                <span class="views">좋아요 100 · 댓글 수 100</span>
+                                <span class="date" th:text="${post.createdAt}"></span>
+                                <span class="views">좋아요 0 · 댓글 수 0</span>
                             </div>
                             <div class="card-tags">
-                                <span class="tag">#양파</span>
-                                <span class="tag">#계란</span>
-                                <span class="tag">#간장</span>
+                                <span class="tag" th:each="tag : ${post.tags}" th:text="${tag}">#태그</span>
                             </div>
                         </div>
                         <div class="card-footer">
                             <div class="profile-info">
-                                <img src="/img/profile_image.svg" alt="프로필 이미지" class="profile-img">
+                                <img th:src="${post.profileImageUrl}" alt="프로필 이미지" class="profile-img">
                                 <div class="profile-text">
-                                    <div class="nickname">홍길동</div>
-                                    <div class="grade">계란을 접수한 자</div>
+                                    <div class="nickname" th:text="${post.nickname}"></div>
+                                    <div class="grade" th:text="${post.userGrade}"></div>
                                 </div>
                             </div>
                         </div>
                     </a>
                     <button class="bookmark-btn" type="button">
-                        <img src="/img/card_bookmark_on.png" alt="썸네일 북마크 이미지">
-                    </button>
-                </div>
-                <!-- 추가 카드 반복 -->
-                <div class="card">
-                    <a href="/posts/1" class="card-link">
-                        <div class="card-thumb">
-                            <img src="https://cdn.pixabay.com/photo/2014/12/15/13/40/spaghetti-569067_1280.jpg" alt="썸네일" />
-                            <span class="card-category">재료 기반 요리 추천</span>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="card-title">김과 해산물을 사용한 냉파스타</h3>
-                            <p class="card-desc">신안군의 특산물인 대하(왕새우), 전복 낙지, 김, 마늘, 양파, 땅콩 등을 활용하여 만든 ‘김과 해산물을 사용한 냉파스타’입니다.
-                                전국에서 유일하게 지주식 김 양식을 하는 신안의 깨끗하고 담백한 김 신선하고 맛 좋은 해산물이 조화롭게 어우러지며 입맛을 돋우는 냉파스타 요리입니다.
-                                해당 레시피는 신안군 [신안천일염 및 농수특산물 활용 레시피 등록홍보 사업]의 일환으로 이수복 셰프가 개발하였습니다.
-                                *음식 사진 및 조리 과정 사진은 레시피를 재현하는 과정에서 촬영하였으므로 실제 원작자가 만든 음식과 일부 다른 부분이 있을 수 있습니다.</p>
-                            <div class="post-stats">
-                                <span class="date">2025.04.24</span>
-                                <span class="views">좋아요 100 · 댓글 수 100</span>
-                            </div>
-                            <div class="card-tags">
-                                <span class="tag">#양파</span>
-                                <span class="tag">#계란</span>
-                                <span class="tag">#간장</span>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="profile-info">
-                                <img src="/img/profile_image.svg" alt="프로필 이미지" class="profile-img">
-                                <div class="profile-text">
-                                    <div class="nickname">홍길동</div>
-                                    <div class="grade">계란을 접수한 자</div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                    <button class="bookmark-btn" type="button">
-                        <img src="/img/card_bookmark.png" alt="썸네일 북마크 이미지">
-                    </button>
-                </div>
-                <div class="card">
-                    <a href="/posts/1" class="card-link">
-                        <div class="card-thumb">
-                            <img src="https://cdn.pixabay.com/photo/2014/12/15/13/40/spaghetti-569067_1280.jpg" alt="썸네일" />
-                            <span class="card-category">재료 기반 요리 추천</span>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="card-title">김과 해산물을 사용한 냉파스타</h3>
-                            <p class="card-desc">신안군의 특산물인 대하(왕새우), 전복 낙지, 김, 마늘, 양파, 땅콩 등을 활용하여 만든 ‘김과 해산물을 사용한 냉파스타’입니다.
-                                전국에서 유일하게 지주식 김 양식을 하는 신안의 깨끗하고 담백한 김 신선하고 맛 좋은 해산물이 조화롭게 어우러지며 입맛을 돋우는 냉파스타 요리입니다.
-                                해당 레시피는 신안군 [신안천일염 및 농수특산물 활용 레시피 등록홍보 사업]의 일환으로 이수복 셰프가 개발하였습니다.
-                                *음식 사진 및 조리 과정 사진은 레시피를 재현하는 과정에서 촬영하였으므로 실제 원작자가 만든 음식과 일부 다른 부분이 있을 수 있습니다.</p>
-                            <div class="post-stats">
-                                <span class="date">2025.04.24</span>
-                                <span class="views">좋아요 100 · 댓글 수 100</span>
-                            </div>
-                            <div class="card-tags">
-                                <span class="tag">#양파</span>
-                                <span class="tag">#계란</span>
-                                <span class="tag">#간장</span>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="profile-info">
-                                <img src="/img/profile_image.svg" alt="프로필 이미지" class="profile-img">
-                                <div class="profile-text">
-                                    <div class="nickname">홍길동</div>
-                                    <div class="grade">계란을 접수한 자</div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                    <button class="bookmark-btn" type="button">
-                        <img src="/img/card_bookmark_on.png" alt="썸네일 북마크 이미지">
-                    </button>
-                </div>
-                <div class="card">
-                    <a href="/posts/1" class="card-link">
-                        <div class="card-thumb">
-                            <img src="https://cdn.pixabay.com/photo/2014/12/15/13/40/spaghetti-569067_1280.jpg" alt="썸네일" />
-                            <span class="card-category">재료 기반 요리 추천</span>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="card-title">김과 해산물을 사용한 냉파스타</h3>
-                            <p class="card-desc">신안군의 특산물인 대하(왕새우), 전복 낙지, 김, 마늘, 양파, 땅콩 등을 활용하여 만든 ‘김과 해산물을 사용한 냉파스타’입니다.
-                                전국에서 유일하게 지주식 김 양식을 하는 신안의 깨끗하고 담백한 김 신선하고 맛 좋은 해산물이 조화롭게 어우러지며 입맛을 돋우는 냉파스타 요리입니다.
-                                해당 레시피는 신안군 [신안천일염 및 농수특산물 활용 레시피 등록홍보 사업]의 일환으로 이수복 셰프가 개발하였습니다.
-                                *음식 사진 및 조리 과정 사진은 레시피를 재현하는 과정에서 촬영하였으므로 실제 원작자가 만든 음식과 일부 다른 부분이 있을 수 있습니다.</p>
-                            <div class="post-stats">
-                                <span class="date">2025.04.24</span>
-                                <span class="views">좋아요 100 · 댓글 수 100</span>
-                            </div>
-                            <div class="card-tags">
-                                <span class="tag">#양파</span>
-                                <span class="tag">#계란</span>
-                                <span class="tag">#간장</span>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="profile-info">
-                                <img src="/img/profile_image.svg" alt="프로필 이미지" class="profile-img">
-                                <div class="profile-text">
-                                    <div class="nickname">홍길동</div>
-                                    <div class="grade">계란을 접수한 자</div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                    <button class="bookmark-btn" type="button">
-                        <img src="/img/card_bookmark_on.png" alt="썸네일 북마크 이미지">
-                    </button>
-                </div>
-                <div class="card">
-                    <a href="/posts/1" class="card-link">
-                        <div class="card-thumb">
-                            <img src="https://cdn.pixabay.com/photo/2014/12/15/13/40/spaghetti-569067_1280.jpg" alt="썸네일" />
-                            <span class="card-category">재료 기반 요리 추천</span>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="card-title">김과 해산물을 사용한 냉파스타</h3>
-                            <p class="card-desc">신안군의 특산물인 대하(왕새우), 전복 낙지, 김, 마늘, 양파, 땅콩 등을 활용하여 만든 ‘김과 해산물을 사용한 냉파스타’입니다.
-                                전국에서 유일하게 지주식 김 양식을 하는 신안의 깨끗하고 담백한 김 신선하고 맛 좋은 해산물이 조화롭게 어우러지며 입맛을 돋우는 냉파스타 요리입니다.
-                                해당 레시피는 신안군 [신안천일염 및 농수특산물 활용 레시피 등록홍보 사업]의 일환으로 이수복 셰프가 개발하였습니다.
-                                *음식 사진 및 조리 과정 사진은 레시피를 재현하는 과정에서 촬영하였으므로 실제 원작자가 만든 음식과 일부 다른 부분이 있을 수 있습니다.</p>
-                            <div class="post-stats">
-                                <span class="date">2025.04.24</span>
-                                <span class="views">좋아요 100 · 댓글 수 100</span>
-                            </div>
-                            <div class="card-tags">
-                                <span class="tag">#양파</span>
-                                <span class="tag">#계란</span>
-                                <span class="tag">#간장</span>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="profile-info">
-                                <img src="/img/profile_image.svg" alt="프로필 이미지" class="profile-img">
-                                <div class="profile-text">
-                                    <div class="nickname">홍길동</div>
-                                    <div class="grade">계란을 접수한 자</div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                    <button class="bookmark-btn" type="button">
-                        <img src="/img/card_bookmark_on.png" alt="썸네일 북마크 이미지">
-                    </button>
-                </div>
-                <div class="card">
-                    <a href="/posts/1" class="card-link">
-                        <div class="card-thumb">
-                            <img src="https://cdn.pixabay.com/photo/2014/12/15/13/40/spaghetti-569067_1280.jpg" alt="썸네일" />
-                            <span class="card-category">재료 기반 요리 추천</span>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="card-title">김과 해산물을 사용한 냉파스타</h3>
-                            <p class="card-desc">신안군의 특산물인 대하(왕새우), 전복 낙지, 김, 마늘, 양파, 땅콩 등을 활용하여 만든 ‘김과 해산물을 사용한 냉파스타’입니다.
-                                전국에서 유일하게 지주식 김 양식을 하는 신안의 깨끗하고 담백한 김 신선하고 맛 좋은 해산물이 조화롭게 어우러지며 입맛을 돋우는 냉파스타 요리입니다.
-                                해당 레시피는 신안군 [신안천일염 및 농수특산물 활용 레시피 등록홍보 사업]의 일환으로 이수복 셰프가 개발하였습니다.
-                                *음식 사진 및 조리 과정 사진은 레시피를 재현하는 과정에서 촬영하였으므로 실제 원작자가 만든 음식과 일부 다른 부분이 있을 수 있습니다.</p>
-                            <div class="post-stats">
-                                <span class="date">2025.04.24</span>
-                                <span class="views">좋아요 100 · 댓글 수 100</span>
-                            </div>
-                            <div class="card-tags">
-                                <span class="tag">#양파</span>
-                                <span class="tag">#계란</span>
-                                <span class="tag">#간장</span>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="profile-info">
-                                <img src="/img/profile_image.svg" alt="프로필 이미지" class="profile-img">
-                                <div class="profile-text">
-                                    <div class="nickname">홍길동</div>
-                                    <div class="grade">계란을 접수한 자</div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                    <button class="bookmark-btn" type="button">
+<!--                        <img th:src="${post.bookmarked} ? '/img/card_bookmark_on.png' : '/img/card_bookmark.png'" alt="북마크 이미지">-->
                         <img src="/img/card_bookmark_on.png" alt="썸네일 북마크 이미지">
                     </button>
                 </div>
             </div>
+
         </section>
 
         <section class="latest-posts">
             <h3 class="section-title">최신글</h3>
             <ul>
-                <li>
-                    <img src="https://cdn.pixabay.com/photo/2014/08/14/14/21/shish-kebab-417994_960_720.jpg" alt="썸네일" class="thumb" />
+                <li th:each="post : ${newPosts}">
+                    <img th:src="${post.thumbnailUrl}" alt="썸네일" class="thumb" />
                     <div class="post-info">
-                        <p class="post-category">재료 기반 요리 추천</p>
-                        <p class="post-title">절대 실패없는 제육볶음 황금레시피 감칠맛과 매운맛이 좋아요~!!</p>
-                        <p class="post-desc">신안군의 특산물인 대하(왕새우), 전복 낙지, 김, 마늘, 양파, 땅콩 등을 활용하여 만든 ‘김과 해산물을 사용한 냉파스타’입니다.
-                            전국에서 유일하게 지주식 김 양식을 하는 신안의 깨끗하고 담백한 김 신선하고 맛 좋은 해산물이 조화롭게 어우러지며 입맛을 돋우는 냉파스타 요리입니다.
-                            해당 레시피는 신안군 [신안천일염 및 농수특산물 활용 레시피 등록홍보 사업]의 일환으로 이수복 셰프가 개발하였습니다.
-                            *음식 사진 및 조리 과정 사진은 레시피를 재현하는 과정에서 촬영하였으므로 실제 원작자가 만든 음식과 일부 다른 부분이 있을 수 있습니다.</p>
+                        <p class="post-category" th:text="${post.category.displayName}">카테고리</p>
+                        <p class="post-title" th:text="${post.title}">게시글 제목</p>
+                        <p class="post-desc" th:text="${post.content}">게시글 설명</p>
                     </div>
-                    <span class="date">2025.04.29</span>
-                </li>
-                <li>
-                    <img src="https://cdn.pixabay.com/photo/2014/08/14/14/21/shish-kebab-417994_960_720.jpg" alt="썸네일" class="thumb" />
-                    <div class="post-info">
-                        <p class="post-category">재료 기반 요리 추천</p>
-                        <p class="post-title">절대 실패없는 제육볶음 황금레시피 감칠맛과 매운맛이 좋아요~!!</p>
-                        <p class="post-desc">신안군의 특산물인 대하(왕새우), 전복 낙지, 김, 마늘, 양파, 땅콩 등을 활용하여 만든 ‘김과 해산물을 사용한 냉파스타’입니다.
-                            전국에서 유일하게 지주식 김 양식을 하는 신안의 깨끗하고 담백한 김 신선하고 맛 좋은 해산물이 조화롭게 어우러지며 입맛을 돋우는 냉파스타 요리입니다.
-                            해당 레시피는 신안군 [신안천일염 및 농수특산물 활용 레시피 등록홍보 사업]의 일환으로 이수복 셰프가 개발하였습니다.
-                            *음식 사진 및 조리 과정 사진은 레시피를 재현하는 과정에서 촬영하였으므로 실제 원작자가 만든 음식과 일부 다른 부분이 있을 수 있습니다.</p>
-                    </div>
-                    <span class="date">2025.04.28</span>
-                </li>
-                <!-- 반복 -->
-                <li>
-                    <img src="https://cdn.pixabay.com/photo/2014/08/14/14/21/shish-kebab-417994_960_720.jpg" alt="썸네일" class="thumb" />
-                    <div class="post-info">
-                        <p class="post-category">재료 기반 요리 추천</p>
-                        <p class="post-title">절대 실패없는 제육볶음 황금레시피 감칠맛과 매운맛이 좋아요~!!</p>
-                        <p class="post-desc">신안군의 특산물인 대하(왕새우), 전복 낙지, 김, 마늘, 양파, 땅콩 등을 활용하여 만든 ‘김과 해산물을 사용한 냉파스타’입니다.
-                            전국에서 유일하게 지주식 김 양식을 하는 신안의 깨끗하고 담백한 김 신선하고 맛 좋은 해산물이 조화롭게 어우러지며 입맛을 돋우는 냉파스타 요리입니다.
-                            해당 레시피는 신안군 [신안천일염 및 농수특산물 활용 레시피 등록홍보 사업]의 일환으로 이수복 셰프가 개발하였습니다.
-                            *음식 사진 및 조리 과정 사진은 레시피를 재현하는 과정에서 촬영하였으므로 실제 원작자가 만든 음식과 일부 다른 부분이 있을 수 있습니다.</p>
-                    </div>
-                    <span class="date">2025.04.28</span>
-                </li>
-                <li>
-                    <img src="https://cdn.pixabay.com/photo/2014/08/14/14/21/shish-kebab-417994_960_720.jpg" alt="썸네일" class="thumb" />
-                    <div class="post-info">
-                        <p class="post-category">재료 기반 요리 추천</p>
-                        <p class="post-title">절대 실패없는 제육볶음 황금레시피 감칠맛과 매운맛이 좋아요~!!</p>
-                        <p class="post-desc">신안군의 특산물인 대하(왕새우), 전복 낙지, 김, 마늘, 양파, 땅콩 등을 활용하여 만든 ‘김과 해산물을 사용한 냉파스타’입니다.
-                            전국에서 유일하게 지주식 김 양식을 하는 신안의 깨끗하고 담백한 김 신선하고 맛 좋은 해산물이 조화롭게 어우러지며 입맛을 돋우는 냉파스타 요리입니다.
-                            해당 레시피는 신안군 [신안천일염 및 농수특산물 활용 레시피 등록홍보 사업]의 일환으로 이수복 셰프가 개발하였습니다.
-                            *음식 사진 및 조리 과정 사진은 레시피를 재현하는 과정에서 촬영하였으므로 실제 원작자가 만든 음식과 일부 다른 부분이 있을 수 있습니다.</p>
-                    </div>
-                    <span class="date">2025.04.28</span>
-                </li>
-                <li>
-                    <img src="https://cdn.pixabay.com/photo/2014/08/14/14/21/shish-kebab-417994_960_720.jpg" alt="썸네일" class="thumb" />
-                    <div class="post-info">
-                        <p class="post-category">재료 기반 요리 추천</p>
-                        <p class="post-title">절대 실패없는 제육볶음 황금레시피 감칠맛과 매운맛이 좋아요~!!</p>
-                        <p class="post-desc">신안군의 특산물인 대하(왕새우), 전복 낙지, 김, 마늘, 양파, 땅콩 등을 활용하여 만든 ‘김과 해산물을 사용한 냉파스타’입니다.
-                            전국에서 유일하게 지주식 김 양식을 하는 신안의 깨끗하고 담백한 김 신선하고 맛 좋은 해산물이 조화롭게 어우러지며 입맛을 돋우는 냉파스타 요리입니다.
-                            해당 레시피는 신안군 [신안천일염 및 농수특산물 활용 레시피 등록홍보 사업]의 일환으로 이수복 셰프가 개발하였습니다.
-                            *음식 사진 및 조리 과정 사진은 레시피를 재현하는 과정에서 촬영하였으므로 실제 원작자가 만든 음식과 일부 다른 부분이 있을 수 있습니다.</p>
-                    </div>
-                    <span class="date">2025.04.28</span>
-                </li>
-                <li>
-                    <img src="https://cdn.pixabay.com/photo/2014/08/14/14/21/shish-kebab-417994_960_720.jpg" alt="썸네일" class="thumb" />
-                    <div class="post-info">
-                        <p class="post-category">재료 기반 요리 추천</p>
-                        <p class="post-title">절대 실패없는 제육볶음 황금레시피 감칠맛과 매운맛이 좋아요~!!</p>
-                        <p class="post-desc">신안군의 특산물인 대하(왕새우), 전복 낙지, 김, 마늘, 양파, 땅콩 등을 활용하여 만든 ‘김과 해산물을 사용한 냉파스타’입니다.
-                            전국에서 유일하게 지주식 김 양식을 하는 신안의 깨끗하고 담백한 김 신선하고 맛 좋은 해산물이 조화롭게 어우러지며 입맛을 돋우는 냉파스타 요리입니다.
-                            해당 레시피는 신안군 [신안천일염 및 농수특산물 활용 레시피 등록홍보 사업]의 일환으로 이수복 셰프가 개발하였습니다.
-                            *음식 사진 및 조리 과정 사진은 레시피를 재현하는 과정에서 촬영하였으므로 실제 원작자가 만든 음식과 일부 다른 부분이 있을 수 있습니다.</p>
-                    </div>
-                    <span class="date">2025.04.28</span>
-                </li>
-                <li>
-                    <img src="https://cdn.pixabay.com/photo/2014/08/14/14/21/shish-kebab-417994_960_720.jpg" alt="썸네일" class="thumb" />
-                    <div class="post-info">
-                        <p class="post-category">재료 기반 요리 추천</p>
-                        <p class="post-title">절대 실패없는 제육볶음 황금레시피 감칠맛과 매운맛이 좋아요~!!</p>
-                        <p class="post-desc">신안군의 특산물인 대하(왕새우), 전복 낙지, 김, 마늘, 양파, 땅콩 등을 활용하여 만든 ‘김과 해산물을 사용한 냉파스타’입니다.
-                            전국에서 유일하게 지주식 김 양식을 하는 신안의 깨끗하고 담백한 김 신선하고 맛 좋은 해산물이 조화롭게 어우러지며 입맛을 돋우는 냉파스타 요리입니다.
-                            해당 레시피는 신안군 [신안천일염 및 농수특산물 활용 레시피 등록홍보 사업]의 일환으로 이수복 셰프가 개발하였습니다.
-                            *음식 사진 및 조리 과정 사진은 레시피를 재현하는 과정에서 촬영하였으므로 실제 원작자가 만든 음식과 일부 다른 부분이 있을 수 있습니다.</p>
-                    </div>
-                    <span class="date">2025.04.28</span>
-                </li>
-                <li>
-                    <img src="https://cdn.pixabay.com/photo/2014/08/14/14/21/shish-kebab-417994_960_720.jpg" alt="썸네일" class="thumb" />
-                    <div class="post-info">
-                        <p class="post-category">재료 기반 요리 추천</p>
-                        <p class="post-title">절대 실패없는 제육볶음 황금레시피 감칠맛과 매운맛이 좋아요~!!</p>
-                        <p class="post-desc">신안군의 특산물인 대하(왕새우), 전복 낙지, 김, 마늘, 양파, 땅콩 등을 활용하여 만든 ‘김과 해산물을 사용한 냉파스타’입니다.
-                            전국에서 유일하게 지주식 김 양식을 하는 신안의 깨끗하고 담백한 김 신선하고 맛 좋은 해산물이 조화롭게 어우러지며 입맛을 돋우는 냉파스타 요리입니다.
-                            해당 레시피는 신안군 [신안천일염 및 농수특산물 활용 레시피 등록홍보 사업]의 일환으로 이수복 셰프가 개발하였습니다.
-                            *음식 사진 및 조리 과정 사진은 레시피를 재현하는 과정에서 촬영하였으므로 실제 원작자가 만든 음식과 일부 다른 부분이 있을 수 있습니다.</p>
-                    </div>
-                    <span class="date">2025.04.28</span>
-                </li>
-                <li>
-                    <img src="https://cdn.pixabay.com/photo/2014/08/14/14/21/shish-kebab-417994_960_720.jpg" alt="썸네일" class="thumb" />
-                    <div class="post-info">
-                        <p class="post-category">재료 기반 요리 추천</p>
-                        <p class="post-title">절대 실패없는 제육볶음 황금레시피 감칠맛과 매운맛이 좋아요~!!</p>
-                        <p class="post-desc">신안군의 특산물인 대하(왕새우), 전복 낙지, 김, 마늘, 양파, 땅콩 등을 활용하여 만든 ‘김과 해산물을 사용한 냉파스타’입니다.
-                            전국에서 유일하게 지주식 김 양식을 하는 신안의 깨끗하고 담백한 김 신선하고 맛 좋은 해산물이 조화롭게 어우러지며 입맛을 돋우는 냉파스타 요리입니다.
-                            해당 레시피는 신안군 [신안천일염 및 농수특산물 활용 레시피 등록홍보 사업]의 일환으로 이수복 셰프가 개발하였습니다.
-                            *음식 사진 및 조리 과정 사진은 레시피를 재현하는 과정에서 촬영하였으므로 실제 원작자가 만든 음식과 일부 다른 부분이 있을 수 있습니다.</p>
-                    </div>
-                    <span class="date">2025.04.28</span>
-                </li>
-                <li>
-                    <img src="https://cdn.pixabay.com/photo/2014/08/14/14/21/shish-kebab-417994_960_720.jpg" alt="썸네일" class="thumb" />
-                    <div class="post-info">
-                        <p class="post-category">재료 기반 요리 추천</p>
-                        <p class="post-title">절대 실패없는 제육볶음 황금레시피 감칠맛과 매운맛이 좋아요~!!</p>
-                        <p class="post-desc">신안군의 특산물인 대하(왕새우), 전복 낙지, 김, 마늘, 양파, 땅콩 등을 활용하여 만든 ‘김과 해산물을 사용한 냉파스타’입니다.
-                            전국에서 유일하게 지주식 김 양식을 하는 신안의 깨끗하고 담백한 김 신선하고 맛 좋은 해산물이 조화롭게 어우러지며 입맛을 돋우는 냉파스타 요리입니다.
-                            해당 레시피는 신안군 [신안천일염 및 농수특산물 활용 레시피 등록홍보 사업]의 일환으로 이수복 셰프가 개발하였습니다.
-                            *음식 사진 및 조리 과정 사진은 레시피를 재현하는 과정에서 촬영하였으므로 실제 원작자가 만든 음식과 일부 다른 부분이 있을 수 있습니다.</p>
-                    </div>
-                    <span class="date">2025.04.28</span>
+                    <span class="date" th:text="${post.createdAt}">작성일</span>
                 </li>
             </ul>
         </section>
     </div>
-    <a href="/" class="write-link">
+    <a th:href="@{/new-post}" class="write-link">
         <img src="/img/write.svg" alt="edit 아이콘"/>글쓰기</a>
 </main>
 
-<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 
-<script src="/js/common.js"></script>
+<script th:src="@{/js/header.js}" defer></script>
 </body>
 </html>
