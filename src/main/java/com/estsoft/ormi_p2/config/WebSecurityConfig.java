@@ -8,22 +8,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
 @Configuration
-public class WebSecurityConfig implements WebMvcConfigurer {
+public class WebSecurityConfig {
     private UserDetailService userDetailService;
 
     public WebSecurityConfig(UserDetailService userDetailService) {
         this.userDetailService = userDetailService;
-    }
-
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/images/**")
-                .addResourceLocations("file:" + System.getProperty("user.dir") + "/uploads/");
     }
 
     @Bean
@@ -31,22 +23,22 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         return web -> web.ignoring().requestMatchers("/css/**", "/js/**", "/img/**");
     }
 
-    // 2) 특정 HTTP 요청에 대한 웹 기반 보안 구성
+//     2) 특정 HTTP 요청에 대한 웹 기반 보안 구성
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(auth ->              // 인증, 인가 설정
-                        auth.requestMatchers("/", "/login", "/signup", "/user", "/new-post", "/posts", "/api/posts/**").permitAll()
-                                .requestMatchers("/new-article").hasRole("ADMIN")  // ROLE_ADMIN
+                        auth.requestMatchers("/", "/login", "/signup", "/user",
+                                        "/api/nickname-check").permitAll()
+                                .requestMatchers("/admin").hasRole("ADMIN")  // ROLE_ADMIN
                                 .anyRequest().authenticated())
                 .formLogin(auth -> auth.loginPage("/login")     // 폼 기반 로그인 설정
                         .defaultSuccessUrl("/", true))
-                .logout(auth -> auth.logoutSuccessUrl("/login") // 로그아웃 설정
+                .logout(auth -> auth.logoutSuccessUrl("/") // 로그아웃 설정
                         .invalidateHttpSession(true)
                         .clearAuthentication(true))
                 .csrf(AbstractHttpConfigurer::disable);                  // csrf 비활성화
         return httpSecurity.build();
     }
-
 
 
     // 패스워드 인코더로 사용할 빈 등록
