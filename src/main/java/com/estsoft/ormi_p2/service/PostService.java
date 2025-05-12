@@ -50,7 +50,7 @@ public class PostService {
         post.setContent(request.getContent());
         post.setDifficulty(difficulty);
 
-        User user = userRepository.findByUserId(1L).orElse(new User());
+        User user = userRepository.findByLoginId("").orElse(new User());
         post.setUser(user);
 
         Post savedPost = postRepository.save(post);

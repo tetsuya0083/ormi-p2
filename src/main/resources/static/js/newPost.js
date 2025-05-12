@@ -123,24 +123,18 @@ $(document).ready(function () {
     $('form').on('submit', function (e) {
         e.preventDefault();
 
+        const form = e.target;
+        const formData = new FormData(form);
+
         const title = $('#title').val().trim();
         const content = $('#summernote').summernote('code').trim();
         const category = $('#category').val();
-        const tags = tagify.value.map(tag => `#${tag.value}`).join(',');
-        const imageFile = $('#image')[0]?.files[0];
 
         // 필수 입력 항목 체크
         if (!title || !content || !category) {
             alert('제목, 내용, 카테고리는 필수 입력 항목입니다.');
             return;
         }
-
-        const formData = new FormData();
-        formData.append('title', title);
-        formData.append('content', content);
-        formData.append('category', category);
-        formData.append('tags', tags);
-        formData.append('image', imageFile);
 
         // SHARE 카테고리일 때 난이도 체크
         if (category === "SHARE") {
@@ -154,9 +148,6 @@ $(document).ready(function () {
             formData.delete('difficulty');
         }
 
-        if (imageFile) {
-            formData.append('image', imageFile);
-        }
 
         fetch('/api/posts', {
             method: 'POST',

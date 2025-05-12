@@ -42,7 +42,7 @@ public class PostController {
             @RequestParam("category") String category,
             @RequestParam(value = "difficulty", required = false) String difficulty,
             @RequestParam("tags") String tags,
-            @RequestParam(value = "image", required = false) MultipartFile image
+            @RequestParam(value = "imageInput", required = false) MultipartFile image
     ) throws IOException {
         //
         System.out.println("=== 게시글 저장 시도 ===");

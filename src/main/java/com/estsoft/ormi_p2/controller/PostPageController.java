@@ -2,8 +2,10 @@ package com.estsoft.ormi_p2.controller;
 
 import com.estsoft.ormi_p2.domain.Category;
 import com.estsoft.ormi_p2.domain.Post;
+import com.estsoft.ormi_p2.domain.User;
 import com.estsoft.ormi_p2.dto.PostViewResponse;
 import com.estsoft.ormi_p2.service.PostService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +24,11 @@ public class PostPageController {
 
     // 게시글 작성 페이지 (GET)
     @GetMapping("/new-post")
-    public String showBlogEditPage(@RequestParam(required = false) Long id, Model model) {
+    public String showBlogEditPage(@RequestParam(required = false) Long id, Model model,
+                                   @AuthenticationPrincipal User user) {
         model.addAttribute("categories", Category.values());
+        model.addAttribute("user", user);
+
 
         if (id == null) {
             model.addAttribute("post", new PostViewResponse());
@@ -36,6 +41,7 @@ public class PostPageController {
 
             model.addAttribute("post", new PostViewResponse(post));
         }
+
         return "newPost";
     }
 
@@ -67,12 +73,14 @@ public class PostPageController {
 
     // 게시글 목록 페이지 (GET) - DTO로 변환된 게시글 목록
     @GetMapping("/posts")
-    public String getPosts(Model model) {
+    public String getPosts(Model model, @AuthenticationPrincipal User user) {
         List<PostViewResponse> postList = postService.getAllPosts()
                 .stream().map(PostViewResponse::new)
                 .toList();
 
         model.addAttribute("posts", postList);
+        model.addAttribute("user", user);
+
         return "postList";  // html 페이지
     }
 
