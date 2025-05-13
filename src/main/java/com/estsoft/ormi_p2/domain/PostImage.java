@@ -45,7 +45,7 @@ public class PostImage {
         this.representImageYn = representImageYn;
     }
 
-//    public List<PostImage> getUrl() {
-//        return List.of();
-//    }
+    public List<PostImage> getUrl() {
+        return List.of();
+    }
 }
