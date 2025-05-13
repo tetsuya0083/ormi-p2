@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -70,14 +71,14 @@ public class PostService {
         Post savedPost = postRepository.save(post);
 
         // 대표 이미지 저장
-        savePostImage(savedPost, request.getRepresentImageUrl(), true);
+        //savePostImage(savedPost, request.getRepresentImageUrl(), true);
 
         // 일반 이미지들 저장
-        if (request.getImageUrl() != null && !request.getImageUrl().isEmpty()) {
-            for (String imageUrl : request.getImageUrl()) {
-                savePostImage(savedPost, imageUrl, false);
-            }
-        }
+//        if (request.getImageUrl() != null && !request.getImageUrl().isEmpty()) {
+//            for (String imageUrl : request.getImageUrl()) {
+//                savePostImage(savedPost, imageUrl, false);
+//            }
+//        }
 
         // 태그 저장 (기존 태그 재사용 X)
         Long keywordId = 1L;

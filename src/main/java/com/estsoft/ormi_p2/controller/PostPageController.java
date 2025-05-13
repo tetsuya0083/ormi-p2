@@ -17,6 +17,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.Comparator;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
@@ -109,9 +111,7 @@ public class PostPageController {
         model.addAttribute("user", user);
 
         Page<PostViewResponse> paging = postService.getPostsByUserId(user.getUserId(), page);
-        model.addAttribute("paging", paging);;
-
-        return "myPosts";
+        model.addAttribute("paging", paging);
 
         if (user != null) {
             model.addAttribute("user", user);
