@@ -53,41 +53,6 @@ public class PostService {
     }
 
     @Transactional
-    public void createPost(AddPostRequest request) {
-        Category category = Category.valueOf(request.getCategory());
-        Difficulty difficulty = processDifficulty(category, request.getDifficulty());
-        User user = userService.getCurrentUser();
-
-        Post post = new Post();
-        post.setTitle(request.getTitle());
-        post.setCategory(category);
-        post.setContent(request.getContent());
-        post.setDifficulty(difficulty);
-        post.setUser(user);
-
-        Post savedPost = postRepository.save(post);
-
-        savePostImage(savedPost, request.getRepresentImageUrl(), true);
-
-        if (request.getImageUrl() != null && !request.getImageUrl().isEmpty()) {
-            for (String imageUrl : request.getImageUrl()) {
-                savePostImage(savedPost, imageUrl, false);
-            }
-        }
-
-        Long keywordId = 1L;
-        if (request.getTags() != null && !request.getTags().isEmpty()) {
-            for (String tagName : request.getTags()) {
-                Tag tag = tagService.getOrCreateTag(tagName);
-
-                PostKeyword postKeyword = new PostKeyword(savedPost, tag, keywordId);
-
-                postKeywordRepository.save(postKeyword);
-            }
-        }
-    }
-
-    @Transactional
     public Post savePost(String title, String content, String category,
                          String difficulty, String tagString, MultipartFile image, User user) {
         Category categoryEnum = Category.valueOf(category.toUpperCase());
@@ -125,23 +90,6 @@ public class PostService {
         } else {
             return Difficulty.EASY; // 기본값은 EASY
         }
-    }
-
-    // 게시글 이미지 저장
-    private void savePostImage(Post savedPost, String imageUrl, boolean isRepresentative) {
-        // 이미지가 없을 경우 기본 이미지 사용
-        if (imageUrl == null || imageUrl.isEmpty()) {
-            imageUrl = "/img/default-thumbnail.jpg"; // 기본 이미지 경로
-        }
-
-        // 저장할 이미지 정보 설정
-        PostImage postImage = PostImage.builder()
-                .post(savedPost)
-                .imageUrl(imageUrl)
-                .representImageYn(isRepresentative)
-                .build();
-
-        postImageRepository.save(postImage);
     }
 
     // MultipartFile 이미지 저장

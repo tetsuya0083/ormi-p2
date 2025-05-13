@@ -14,7 +14,7 @@ document.getElementById("create-comment-btn").addEventListener("click", function
         },
         body: JSON.stringify({
             postId: postId,
-            content: commentContent
+            content: commentContent,
         })
     })
         .then(response => {

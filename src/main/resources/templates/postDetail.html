@@ -87,13 +87,15 @@
                     </div>
                     <!-- 목록, 수정, 삭제 버튼 추가 -->
                 </div>
-                <a href="/posts" class="btn btn-outline-secondary btn-sm mr-2">목록</a>  <!-- 목록으로 이동 -->
-                <div th:if="${isAuthor}">
-                    <button type="button" id="modify-btn"
-                            th:onclick="|location.href='/new-post?id=${post.id}'|"
-                            class="btn btn-primary btn-sm">수정</button>
-                    <button type="button" id="delete-btn"
-                            class="btn btn-secondary btn-sm">삭제</button>
+                <div class="manage">
+                    <a href="/posts" class="btn btn-outline-secondary btn-sm mr-2">목록</a>  <!-- 목록으로 이동 -->
+                    <div th:if="${isAuthor}">
+                        <button type="button" id="modify-btn"
+                                th:onclick="|location.href='/new-post?id=${post.id}'|"
+                                class="btn btn-primary btn-sm">수정</button>
+                        <button type="button" id="delete-btn"
+                                class="btn btn-secondary btn-sm">삭제</button>
+                    </div>
                 </div>
             </div>
 
@@ -117,11 +119,11 @@
                 <div id="comments-container">
                     <!-- 댓글 목록이 여기에 동적으로 추가될 것입니다. -->
                     <div class="mt-4">
-                        <div class="border-top pt-3" th:each="comment : ${comments}">
+                        <div class="border-top pt-3 pb-3" th:each="comment : ${comments}">
                             <div class="d-flex align-items-center mb-2">
-                                <img src="/images/sample-profile.jpg" class="profile-img mr-2" alt="프로필">
-                                <strong class="mr-2" th:text="${comment.nickname}"></strong> <!-- 댓글 작성자의 닉네임 -->
-                                <span class="mr-2 text-muted small" th:text="'Lv.' + ${comment.userLevel.displayName}"></span> <!-- 댓글 작성자의 레벨 -->
+                                <img th:src="@{${comment.user.getProfileImageUrl()}}" class="profile-img mr-2" alt="프로필">
+                                <strong class="mr-2" th:text="${comment.user.nickname}"></strong> <!-- 댓글 작성자의 닉네임 -->
+                                <span class="mr-2 text-muted small" th:text="'Lv.' + ${comment.user.userLevel.displayName}"></span> <!-- 댓글 작성자의 레벨 -->
                                 <span class="text-muted small" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></span> <!-- 댓글 작성일자 -->
                             </div>
                             <div th:text="${comment.content}">댓글 내용입니다.</div> <!-- 댓글 내용 -->

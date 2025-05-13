@@ -22,3 +22,10 @@
     margin-top: 28px;
     border-radius: 4px;
 }
+
+.manage{
+    display: flex;
+}
+.manage > div{
+    margin-left:auto;
+}

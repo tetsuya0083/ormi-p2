@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -36,8 +37,11 @@ public class CommentApiController {
 
     //댓글 읽어오기
     @GetMapping("/posts/{postId}/comments")
-    public List<Comment> read(@PathVariable long postId) {
-        return commentService.findAll(postId);
+    public List<CommentResponse> read(@PathVariable long postId) {
+        List<Comment> comments = commentService.findAll(postId);
+        return comments.stream()
+                .map(CommentResponse::new)
+                .collect(Collectors.toList());
     }
 
     @PutMapping("/posts/{postId}/comments/{commentId}")
