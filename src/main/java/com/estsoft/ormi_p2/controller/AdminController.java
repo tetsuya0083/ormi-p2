@@ -1,11 +1,14 @@
 package com.estsoft.ormi_p2.controller;
 
+import com.estsoft.ormi_p2.domain.Post;
 import com.estsoft.ormi_p2.domain.User;
 import com.estsoft.ormi_p2.dto.AdminPromoteDto;
 import com.estsoft.ormi_p2.service.AdminService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -80,6 +83,28 @@ public class AdminController {
         return "redirect:/admin/members";
     }
 
+    @GetMapping("/posts")
+    public String viewPosts(Model model,
+                              @RequestParam(defaultValue = "0") int page) {
+        Page<Post> posts = adminService.findPosts(PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt")));
+        model.addAttribute("posts", posts);
+
+        return "adminPostManage";
+    }
+
+    @GetMapping("/posts/{postId}")
+    public String viewPostDetail(@PathVariable Long postId, Model model) {
+        Post post = adminService.findPostById(postId);
+        model.addAttribute("post", post);
+        return "adminPostDetail";
+    }
+
+    @PostMapping("posts/{postId}")
+    public String updatePost(@PathVariable Long postId,
+                             @ModelAttribute Post updatedPost) {
+        adminService.updatePost(postId, updatedPost);
+        return "redirect:/admin/posts";
+    }
 
 
 

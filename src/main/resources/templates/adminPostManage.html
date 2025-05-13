@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>게시글 목록</title>
+  <link rel="stylesheet" href="/css/adminPostStyle.css">
+</head>
+<body>
+<div class="post-management">
+  <h2>게시글 목록</h2>
+
+  <table>
+    <thead>
+    <tr>
+      <th>UID</th>
+      <th>프로필</th>
+      <th>사용자 ID</th>
+      <th>작성일</th>
+      <th>제목</th>
+      <th>상세보기</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="post : ${posts.content}">
+      <td th:text="${post.postId}"></td>
+      <td><img th:src="@{${post.user.profileImageUrl}}" width="40" height="40" alt="프로필"/></td>
+      <td th:text="${post.user.loginId}"></td>
+      <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}"></td>
+      <td th:text="${post.title}"></td>
+      <td><a th:href="@{'/admin/posts/' + ${post.postId}}">상세</a></td>
+    </tr>
+    </tbody>
+
+  </table>
+
+  <div class="pagination">
+    <a th:href="@{|/admin/posts?page=${posts.number - 1}|}" th:if="${posts.hasPrevious()}">← Prev</a>
+    <span th:text="${posts.number + 1}">1</span>
+    <a th:href="@{|/admin/posts?page=${posts.number + 1}|}" th:if="${posts.hasNext()}">Next →</a>
+  </div>
+</div>
+</body>
+</html>

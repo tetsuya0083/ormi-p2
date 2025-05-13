@@ -1,0 +1,125 @@
+/* adminStyle.css */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f9f9fb;
+    color: #333;
+}
+
+.member-management {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.member-management h2 {
+    font-size: 24px;
+    margin-bottom: 24px;
+    font-weight: bold;
+}
+
+form {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+form input[type="text"] {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    font-size: 14px;
+    width: 200px;
+}
+
+form button {
+    padding: 10px 20px;
+    background-color: #7c3aed;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #5b21b6;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 14px;
+}
+
+table thead {
+    background-color: #f1f1f5;
+}
+
+table thead th {
+    padding: 14px 12px;
+    font-weight: 600;
+    color: #555;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+table tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+table tbody td {
+    padding: 12px;
+    vertical-align: middle;
+}
+
+table img {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+a {
+    color: #7c3aed;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.pagination a {
+    display: inline-block;
+    margin: 0 6px;
+    padding: 8px 12px;
+    background-color: #f3f4f6;
+    border-radius: 6px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.pagination a:hover {
+    background-color: #e5e7eb;
+}
+
+.pagination span {
+    font-weight: bold;
+    padding: 8px 12px;
+    margin: 0 6px;
+    border-radius: 6px;
+    background-color: #7c3aed;
+    color: #fff;
+}

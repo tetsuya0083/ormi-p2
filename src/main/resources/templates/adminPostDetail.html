@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>게시글 상세</title>
+</head>
+<body>
+<h2>게시글 상세</h2>
+
+<form th:action="@{'/admin/posts/' + ${post.postId}}" method="post">
+  <div>
+    <label>제목:</label>
+    <input type="text" name="title" th:value="${post.title}" required />
+  </div>
+
+  <div>
+    <label>내용:</label>
+    <textarea name="content" rows="6" cols="60" th:text="${post.content}" required></textarea>
+  </div>
+
+  <div>
+    <label>카테고리:</label>
+    <select name="category" required>
+      <option th:value="RECOMMENDATION" th:selected="${post.category == 'RECOMMENDATION'}">요리 추천</option>
+      <option th:value="SHARE" th:selected="${post.category == 'SHARE'}">레시피 공유</option>
+      <option th:value="REQUEST" th:selected="${post.category == 'REQUEST'}">레시피 요청</option>
+      <option th:value="CHAT" th:selected="${post.category == 'CHAT'}">요리 수다</option>
+      <option th:value="TIPS" th:selected="${post.category == 'TIPS'}">자취 꿀팁</option>
+      <option th:value="QA" th:selected="${post.category == 'QA'}">요리 Q&A</option>
+    </select>
+  </div>
+
+  <div>
+    <label>난이도:</label>
+    <select name="difficulty" required>
+      <option th:value="EASY" th:selected="${post.difficulty == 'EASY'}">쉬움</option>
+      <option th:value="MEDIUM" th:selected="${post.difficulty == 'MEDIUM'}">보통</option>
+      <option th:value="HARD" th:selected="${post.difficulty == 'HARD'}">어려움</option>
+    </select>
+  </div>
+
+  <button type="submit">수정 완료</button>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,121 @@
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+}
+
+.post-management {
+    max-width: 1100px;
+    margin: auto;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+}
+
+.post-management h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+thead {
+    background-color: #f0f0f0;
+    text-align: left;
+}
+
+th, td {
+    padding: 14px;
+    font-size: 14px;
+    vertical-align: middle;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+th {
+    color: #888;
+    font-weight: 600;
+}
+
+td img {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
+td a {
+    background-color: #7c3aed;
+    color: white;
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+td a:hover {
+    background-color: #5b21b6;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.pagination a, .pagination span {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #ddd;
+    background-color: #fff;
+}
+
+.pagination a:hover {
+    background-color: #eee;
+}
+
+.pagination .current-page {
+    background-color: #7c3aed;
+    color: white;
+    border: none;
+}
+
+form {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 8px;
+}
+
+form input[type="text"] {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 240px;
+}
+
+form button {
+    padding: 8px 14px;
+    font-size: 14px;
+    background-color: #7c3aed;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #5b21b6;
+}

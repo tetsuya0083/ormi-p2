@@ -32,7 +32,7 @@ public class WebSecurityConfig {
         httpSecurity.authorizeHttpRequests(auth ->              // 인증, 인가 설정
                         auth.requestMatchers("/", "/login", "/signup", "/user", "/admin/promote",
                                         "/api/nickname-check").permitAll()
-                                .requestMatchers("/admin/members" ).hasRole("ADMIN")  // ROLE_ADMIN
+                                .requestMatchers("/admin/*", "/admin/members", "/admin/posts" ).hasRole("ADMIN")  // ROLE_ADMIN
                                 .anyRequest().authenticated())
                 .formLogin(auth -> auth.loginPage("/login")     // 폼 기반 로그인 설정
                         .successHandler(loginSuccessHandler))
