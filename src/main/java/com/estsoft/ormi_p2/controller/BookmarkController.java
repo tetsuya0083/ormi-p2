@@ -28,7 +28,7 @@ public class BookmarkController {
             @RequestParam(required = false) Category category,
             @RequestParam(required = false) String keyword,
             @RequestParam(defaultValue = "0")  int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "3") int size,
             Model model
     ) {
         // ① userId 추출
@@ -44,7 +44,7 @@ public class BookmarkController {
         model.addAttribute("category",  category);
         model.addAttribute("keyword",   keyword);
         model.addAttribute("categories",Category.values());
-        model.addAttribute("sizes",     new int[]{10,20,50,100});
+        model.addAttribute("sizes",     new int[]{3,10,20,50,100});
 
         return "bookmark";
     }

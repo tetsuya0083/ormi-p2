@@ -1,13 +1,14 @@
-// src/main/java/com/estsoft/ormi_p2/repository/BookmarkRepository.java
 package com.estsoft.ormi_p2.repository;
 
+import com.estsoft.ormi_p2.domain.Bookmark;
 import com.estsoft.ormi_p2.domain.Category;
 import com.estsoft.ormi_p2.domain.Post;
-import com.estsoft.ormi_p2.domain.Bookmark;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
@@ -29,4 +30,15 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
             @Param("keyword")  String keyword,
             Pageable pageable
     );
+
+    // ------------------- 여기에 추가 -------------------
+
+    /** 사용자가 이 포스트를 북마크했는지 체크 */
+    boolean existsByUser_UserIdAndPost_PostId(Long userId, Long postId);
+
+    /** 사용자별 북마크 전체 조회 */
+    List<Bookmark> findByUser_UserId(Long userId);
+
+    /** 사용자-포스트 조합으로 북마크 삭제 */
+    void deleteByUser_UserIdAndPost_PostId(Long userId, Long postId);
 }
