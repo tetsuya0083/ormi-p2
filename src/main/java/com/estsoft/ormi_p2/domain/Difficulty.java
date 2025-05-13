@@ -3,7 +3,8 @@ package com.estsoft.ormi_p2.domain;
 public enum Difficulty {
     EASY("하"),
     MEDIUM("중"),
-    HARD("상");
+    HARD("상"),
+    NONE("없음");
 
     private final String displayName;
 

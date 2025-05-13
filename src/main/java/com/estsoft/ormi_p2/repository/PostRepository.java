@@ -19,4 +19,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("SELECT new com.estsoft.ormi_p2.dto.PostViewResponse(p) FROM Post p WHERE p.user.userId = :userId")
     Page<PostViewResponse> findByUserId(@Param("userId") Long userId, Pageable pageable);
+
+    Page<Post> findAll(Pageable pageable);
+
+    Page<Post> findByCategory(String category, Pageable pageable);
+
 }

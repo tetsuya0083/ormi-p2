@@ -36,12 +36,4 @@ public class PostKeyword {
         this.tag = tag;
         this.keywordId = keywordId;
     }
-
-//    // 생성자: 빌더를 통해 객체 생성
-//    public static PostKeyword create(Post post, Tag tag) {
-//        return PostKeyword.builder()
-//                .post(post)
-//                .tag(tag)
-//                .build();
-//    }
 }

@@ -4,18 +4,12 @@
             <a href="/" class="logo-text">냉장고를 부탁해</a>
         </h2>
         <nav class="nav-menu">
-            <a th:href="@{/board/list/recommend}"
-               th:classappend="${category} == 'recommend' ? 'on' : ''">요리 추천</a>
-            <a th:href="@{/board/list/recipe}"
-               th:classappend="${category} == 'recipe' ? 'on' : ''">레시피 공유</a>
-            <a th:href="@{/board/list/request}"
-               th:classappend="${category} == 'request' ? 'on' : ''">레시피 요청</a>
-            <a th:href="@{/board/list/challenge}"
-               th:classappend="${category} == 'challenge' ? 'on' : ''">요리 수다</a>
-            <a th:href="@{/board/list/tip}"
-               th:classappend="${category} == 'tip' ? 'on' : ''">자취 꿀팁</a>
-            <a th:href="@{/board/list/qna}"
-               th:classappend="${category} == 'qna' ? 'on' : ''">요리 Q&A</a>
+            <a href="javascript:void(0);" class="category-link" th:data-category="RECOMMENDATION">요리 추천</a>
+            <a href="javascript:void(0);" class="category-link" th:data-category="SHARE">레시피 공유</a>
+            <a href="javascript:void(0);" class="category-link" th:data-category="REQUEST">레시피 요청</a>
+            <a href="javascript:void(0);" class="category-link" th:data-category="CHAT">요리 수다</a>
+            <a href="javascript:void(0);" class="category-link" th:data-category="TIPS">자취 꿀팁</a>
+            <a href="javascript:void(0);" class="category-link" th:data-category="QA">요리 Q&A</a>
         </nav>
         <div class="nav-actions">
             <!-- 비로그인 시 보여줄 로그인/회원가입 버튼 -->

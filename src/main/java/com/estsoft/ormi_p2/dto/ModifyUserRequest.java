@@ -8,4 +8,5 @@ import lombok.Setter;
 public class ModifyUserRequest {
     private String nickname;
     private String profileImageUrl;
+
 }

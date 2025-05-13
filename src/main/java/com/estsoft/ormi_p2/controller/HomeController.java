@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.Comparator;
 import java.util.List;
 
-
 @Controller
 public class HomeController {
     private final PostService postService;
@@ -40,6 +39,10 @@ public class HomeController {
         model.addAttribute("likedPosts", likedPostList);
         model.addAttribute("newPosts", newPostList);
         model.addAttribute("user", user);
+
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
 
         return "index";
     }

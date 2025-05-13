@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    const IMAGE_UPLOAD_URL = '/upload-image';
+    const IMAGE_UPLOAD_URL = '/image/upload';
     const maxTags = 5;
     const maxTagLength = 10;
     const imageInput = document.getElementById('imageInput');
@@ -145,7 +145,6 @@ $(document).ready(function () {
             }
         }
 
-
         fetch('/api/posts', {
             method: 'POST',
             headers: {
@@ -169,3 +168,35 @@ $(document).ready(function () {
             });
     });
 });
+
+const modifyButton = document.getElementById('modify-btn');
+
+if (modifyButton) {
+    modifyButton.addEventListener('click', event => {
+        // 수정할 게시글의 ID 가져오기
+        const postId = document.getElementById('post-id').value;  // 게시글 ID를 hidden 필드에서 가져옵니다.
+
+        // 카테고리와 이미지 파일을 포함하여 FormData로 전달
+        const formData = new FormData();
+        formData.append('title', document.getElementById('title').value);
+        formData.append('content', document.getElementById('summernote').value);
+        formData.append('category', document.getElementById('category').value);  // 카테고리 선택값
+        formData.append('imageInput', document.getElementById('imageInput').files[0]);  // 대표 이미지 파일
+
+        // Fetch API를 사용하여 PUT 요청을 보냄
+        fetch(`/api/posts/${postId}`, {
+            method: 'PUT',
+            body: formData,
+        }).then(response => {
+            if (response.ok) {
+                alert('수정 완료되었습니다');
+                location.replace(`/posts/${postId}`);  // 수정된 게시글 상세 페이지로 이동
+            } else {
+                alert('수정에 실패했습니다');
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+            alert('서버 오류가 발생했습니다.');
+        });
+    });
+}

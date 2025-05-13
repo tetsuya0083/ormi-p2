@@ -12,4 +12,5 @@ public class CategoryPostCountDto {
         this.category = category;
         this.postCount = postCount;
     }
+
 }

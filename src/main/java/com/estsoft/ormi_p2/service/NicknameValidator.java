@@ -27,4 +27,3 @@ public class NicknameValidator {
         return (codePoint >= 0xAC00 && codePoint <= 0xD7A3); // 한글 유니코드 범위
     }
 }
-

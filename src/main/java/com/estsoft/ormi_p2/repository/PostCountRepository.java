@@ -12,4 +12,5 @@ public interface PostCountRepository extends JpaRepository<Post, Long> {
     @Query("SELECT new com.estsoft.ormi_p2.dto.CategoryPostCountDto(p.category, COUNT(p)) " +
             "FROM Post p WHERE p.user.userId = :userId GROUP BY p.category")
     List<CategoryPostCountDto> countPostsByCategory(@Param("userId") Long userId);
+
 }

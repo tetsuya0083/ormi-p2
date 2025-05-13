@@ -6,6 +6,8 @@ import com.estsoft.ormi_p2.dto.ModifyUserRequest;
 import com.estsoft.ormi_p2.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +35,7 @@ public class UserService {
                         request.getEmail(), profileImageUrl,
                         User.Role.USER, User.Level.LEVEL_01
                 ));
+
         } catch (DataIntegrityViolationException e) {
             log.error("데이터 무결성 위반: {}", e.getMessage());
             throw new InvalidUserDataException("필수값이 누락되었거나 중복된 값이 있습니다.");
@@ -60,4 +63,15 @@ public class UserService {
 
         return user;
     }
+
+    // 현재 로그인한 사용자 정보 가져오기
+    public User getCurrentUser() {
+        // SecurityContext에서 로그인한 사용자 정보를 가져옵니다.
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String loginId = authentication.getName(); // 로그인한 사용자 ID
+
+        return userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new IllegalArgumentException("로그인된 사용자가 없습니다."));
+    }
+
 }

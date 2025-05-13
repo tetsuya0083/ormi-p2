@@ -1,10 +1,167 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+    <meta property="og:title" content="냉장고를 부탁해 - 맛있는 요리 레시피와 커뮤니티">
+    <meta property="og:description" content="냉장고를 부탁해 블로그에서 다양한 요리 레시피와 음식 관련 커뮤니티 정보를 만나보세요.">
+    <meta property="og:image" content="이미지 URL">
+    <meta property="og:url" content="페이지 URL">
 
+    <title>냉장고를 부탁해 - 커뮤니티</title>
+    <!-- 공통 스타일시트 -->
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/reset.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+
+    <!-- Bootstrap CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Tagify 스타일 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css">
+    <!-- Summernote 스타일 -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+
+    <!-- 페이지 스타일시트 -->
+    <link rel="stylesheet" th:href="@{/css/postDetail.css}">
+</head>
+<body th:inline="javascript">
+<!-- header fragment 자리 -->
+<div th:replace="~{fragments/header :: header}"></div>
+<main class="content">
+    <div class="container">
+        <div class="page-form">
+            <div class="title-area">
+                <h1>게시글 상세보기</h1>
+            </div>
+            <input type="hidden" id="post-id" th:value="${post.id}">
+            <div class="mb-4 form">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 th:text="${post.category != null ? post.category.getDisplayName() : '카테고리 없음'}"></h5> <!-- 카테고리 출력 -->
+                    <div>
+<!--                        <button class="btn-icon mr-2" title="URL 복사" onclick="copyToClipboard()">-->
+<!--                            <img src="/img/link.png" alt="URL 복사" style="width:24px;"> 복사하기-->
+<!--                        </button>-->
+<!--                        data-post-id="${post.id}"-->
+                        <button class="btn-icon bookmark-btn" title="북마크">
+<!--                            <img th:src="${post.bookmarked ? '/icons/bookmark_on.svg' : '/icons/bookmark.svg'}" alt="북마크">-->
+                        </button>
+                    </div>
+                </div>
+
+                <h2 class="mt-3 mb-2" th:text="${post.title}"></h2> <!-- 게시글 제목 출력 -->
+
+                <div class="d-flex align-items-center text-muted small">
+                    <img th:src="@{${post.profileImageUrl != null ? post.profileImageUrl : '/images/default-profile.jpg'}}" class="profile-img mr-2" alt="프로필">
+                    <span class="mr-2" th:text="'Lv.' + ${post.userLevel}"></span>
+                    <strong class="mr-2" th:text="${post.nickname}"></strong>
+                    <span class="mr-2" th:text="${#temporals.format(post.createdAt, 'yyyy.MM.dd HH:MM:SS')}"></span> <!-- 날짜 출력 -->
+                    <span class="mr-2" th:text="'조회수 ' + ${post.viewCount}"></span> <!-- 조회수 출력 -->
+                    <span th:text="'댓글 ' + ${post.commentsCount}"></span> <!-- 댓글 수 출력 -->
+                </div>
+                <div class="mb-4">
+                    <div class="d-flex justify-content-center">
+                        <img th:src="${post.thumbnailUrl}"
+                             alt="대표 이미지" class="img-fluid" style="max-width: 100%; height: auto;">
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <div th:utext="${post.content != null ? post.content : '게시글 내용이 없습니다.'}">여기에 게시글 내용이 들어갑니다.</div> <!-- 게시글 내용 출력 -->
+
+                    <div class="mt-3" th:if="${post.tags != null and post.tags.size() > 0}">
+                        <span th:each="tag : ${post.tags}" class="tag" th:text="'#' + ${tag}"></span> <!-- 태그 출력 -->
+                    </div>
+
+                    <div class="mt-3">
+                        <span><strong>요리 난이도: </strong></span>
+                        <span th:text="${post.difficulty}"></span> <!-- 난이도 출력 -->
+                    </div>
+
+                    <div class="mt-3 d-flex align-items-center">
+                        <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm mr-2"
+                           id="likeButton"
+                           th:data-id="${post.id}"
+                           th:data-likestatus="${post.likesStatus ? 'true' : 'false'}"
+                           th:data-likescount="${post.likesCount}"
+                           th:class="${post.likesStatus} ? 'liked-button' : 'unliked-button'"
+                           th:text="${post.likesStatus} ? '좋아요 취소 (' + ${post.likesCount} + ')' : '좋아요 (' + ${post.likesCount} + ')'"
+                           th:onclick="toggleLike(${post.id})">좋아요</a>
+                    </div>
+                    <!-- 목록, 수정, 삭제 버튼 추가 -->
+                </div>
+                <div class="manage">
+                    <a href="/posts" class="btn btn-outline-secondary btn-sm mr-2">목록</a>  <!-- 목록으로 이동 -->
+                    <div th:if="${isAuthor}">
+                        <button type="button" id="modify-btn"
+                                th:onclick="|location.href='/new-post?id=${post.id}'|"
+                                class="btn btn-primary btn-sm">수정</button>
+                        <button type="button" id="delete-btn"
+                                class="btn btn-secondary btn-sm">삭제</button>
+                    </div>
+                </div>
+            </div>
+            <section id="comments-section" th:style="'margin-top: 20px;'">
+                <div id="comments-container">
+                    <!-- 댓글 목록이 여기에 동적으로 추가될 것입니다. -->
+                    <div class="mt-4">
+                        <div class="border-top pt-3 pb-3" th:each="comment : ${comments}">
+                            <div class="d-flex align-items-center mb-2">
+                                <img th:src="@{${comment.user.getProfileImageUrl()}}" class="profile-img mr-2" alt="프로필">
+                                <strong class="mr-2" th:text="${comment.user.nickname}"></strong> <!-- 댓글 작성자의 닉네임 -->
+                                <span class="mr-2 text-muted small" th:text="'Lv.' + ${comment.user.userLevel.displayName}"></span> <!-- 댓글 작성자의 레벨 -->
+                                <span class="text-muted small" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></span> <!-- 댓글 작성일자 -->
+                            </div>
+                            <div th:text="${comment.content}">댓글 내용입니다.</div> <!-- 댓글 내용 -->
+
+                            <div class="mt-2">
+                                <img src="/images/sample-comment.jpg" class="comment-img" data-toggle="modal" data-target="#imageModal">
+                                <span>+ 2</span>
+                            </div>
+
+                            <div class="mt-2">
+                                <button class="btn btn-outline-primary btn-sm">댓글 채택하기</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 댓글 작성 폼 -->
+                <form id="comment-form">
+                    <div class="form-group">
+                        <label for="comment">댓글 추가:</label>
+                        <textarea class="form-control" id="comment" rows="3"></textarea>
+                        <div class="form-group">
+                            <input type="file" class="form-control-file" multiple>
+                            <small class="form-text text-muted">이미지 최대 10장 첨부 가능</small>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="create-comment-btn">댓글 작성</button>
+                </form>
+            </section>
+
+            <!-- 이미지 모달 -->
+            <div class="modal fade" id="imageModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body text-center">
+                            <img src="#" id="modalImage" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<!-- jQuery (필수) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap 4 JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script th:src="@{/js/header.js}" defer ></script>
+<script th:src="@{/js/postDetail.js}" defer ></script>
+<script th:src="@{/js/comment.js}" defer></script>
 </body>
 </html>
+

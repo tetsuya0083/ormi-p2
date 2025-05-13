@@ -23,7 +23,8 @@
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
 
-<main class="content">
+<main class="content" th:fragment="postListContent">
+    <span th:text="'Page ' + ${currentPage} + ' of ' + ${totalPages}"></span>
     <div class="container">
         <div class="page-form">
             <div class="title-area">
@@ -32,24 +33,25 @@
 
             <div class="filter-search-wrap">
                 <div class="sort-select">
-                    <select class="form-select" onchange="location = this.value;">
-                        <option value="/post/list?sort=latest">최신순</option>
-                        <option value="/post/list?sort=oldest">오래된순</option>
-                        <option value="/post/list?sort=views">조회수순</option>
-                        <option value="/post/list?sort=likes">좋아요순</option>
+                    <select class="form-select" id="sortSelect" onchange="location = this.value;">
+                        <option value="/post/list?sort=latest&page=1" th:selected="${sort == 'latest'}">최신순</option>
+                        <option value="/post/list?sort=oldest&page=1" th:selected="${sort == 'oldest'}">오래된순</option>
+                        <option value="/post/list?sort=views&page=1" th:selected="${sort == 'views'}">조회수순</option>
+                        <option value="/post/list?sort=likes&page=1" th:selected="${sort == 'likes'}">좋아요순</option>
                     </select>
                 </div>
 
-                <form class="search-form" action="/new-post" method="get">
+                <form class="search-form" action="/search" method="get" id="searchForm">
                     <div class="search-input-wrap">
-                        <input type="search" name="search" placeholder="검색어를 입력하세요">
+                        <input type="search" name="search" placeholder="제목, 내용, 작성자 포함 검색" id="searchInput" required>
                         <button type="submit">
                             <img src="/img/search.png" alt="검색 아이콘">
                         </button>
                     </div>
                 </form>
+
             </div>
-            <div class="cards-container">
+            <div class="cards-container" id="posts-container">
                 <div class="card" th:each="post : ${posts}">
                     <a th:href="@{/posts/{id}(id=${post.id})}" class="card-link">
                         <div class="card-thumb">
@@ -58,12 +60,14 @@
                         </div>
                         <div class="card-content">
                             <h3 class="card-title" th:text="${post.title}">게시글 제목</h3>
-                            <p class="card-desc" th:text="${post.content}">게시글 요약</p>
+                            <p class="card-desc" th:utext="${post.content}">게시글 요약</p>
 
-<!--                            <div class="post-stats">-->
-<!--                                <span class="date" th:text="${#temporals.format(post.createdAt, 'yyyy.MM.dd')}">작성일</span>-->
-<!--                                <span class="views" th:text="'좋아요 ' + (${post.likesCount != null ? post.likesCount : 0}) + ' · 댓글 ' + ${post.commentCount}">좋아요 · 댓글</span>-->
-<!--                            </div>-->
+                            <div class="post-stats">
+                                <span class="date" th:text="${#temporals.format(post.createdAt, 'yyyy.MM.dd')}">작성일</span>
+                                <span class="views"
+                                      th:text="'좋아요 ' + (${post.likesCount} != null ? ${post.likesCount} : 0) + ' · 댓글 ' + (${post.commentsCount} != null ? ${post.commentsCount} : 0)">좋아요 · 댓글</span>
+
+                            </div>
 
                             <div class="card-tags">
                                 <ul th:each="tag : ${post.tags}">
@@ -74,40 +78,41 @@
                         <div class="card-footer">
                             <div class="profile-info">
                                 <div class="profile-img">
-                                    <img src="/img/profile_image.svg" alt="프로필 이미지">
+                                    <img alt="프로필 이미지" th:src="@{${post.profileImageUrl}}">
                                 </div>
                                 <div class="profile-text">
-                                    <div class="nickname">작성자</div>
-                                    <div class="grade">등급</div>
+                                    <div class="nickname" th:text="${post.nickname}">작성자</div>
+                                    <div class="grade" th:text="${post.userLevel}">등급</div>
                                 </div>
                             </div>
                         </div>
                     </a>
-                    <button class="bookmark-btn" type="button">
+                    <button class="bookmark-btn" type="button" data-post-id="[[${post.id}]]">
                         <img th:src="@{/img/card_bookmark_on.png}" alt="북마크 이미지">
                     </button>
                 </div>
             </div>
-<!--
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center mt-4">
-                    <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
-                        <a class="page-link" th:href="@{/post/list?page=1}">&laquo;</a>
-                    </li>
-                    <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
-                        <a class="page-link" th:href="@{'/post/list?page=' + ${currentPage - 1}}">이전</a>
-                    </li>
-                    <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${i == currentPage ? 'active' : ''}">
-                        <a class="page-link" th:href="@{'/post/list?page=' + ${i}}">[[${i}]]</a>
-                    </li>
-                    <li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">
-                        <a class="page-link" th:href="@{'/post/list?page=' + ${currentPage + 1}}">다음</a>
-                    </li>
-                    <li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">
-                        <a class="page-link" th:href="@{'/post/list?page=' + ${totalPages}}">&raquo;</a>
-                    </li>
-                </ul>
-            </nav>-->
+
+            <!-- 페이징 처리 -->
+<!--            <nav aria-label="Page navigation">-->
+<!--                <ul class="pagination justify-content-center mt-4" id="pagination">-->
+<!--                    <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">-->
+<!--                        <a class="page-link" th:href="@{/post/list?page=1}">&laquo;</a>-->
+<!--                    </li>-->
+<!--                    <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">-->
+<!--                        <a class="page-link" th:href="@{'/post/list?page=' + ${currentPage - 1}}">이전</a>-->
+<!--                    </li>-->
+<!--                    <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${i == currentPage ? 'active' : ''}">-->
+<!--                        <a class="page-link" th:href="@{'/post/list?page=' + ${i}}">[[${i}]]</a>-->
+<!--                    </li>-->
+<!--                    <li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">-->
+<!--                        <a class="page-link" th:href="@{'/post/list?page=' + ${currentPage + 1}}">다음</a>-->
+<!--                    </li>-->
+<!--                    <li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">-->
+<!--                        <a class="page-link" th:href="@{'/post/list?page=' + ${totalPages}}">&raquo;</a>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </nav>-->
         </div>
     </div>
 
@@ -124,5 +129,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script th:src="@{/js/header.js}" defer></script>
+<script th:src="@{/js/postList.js}" defer></script>
 </body>
 </html>

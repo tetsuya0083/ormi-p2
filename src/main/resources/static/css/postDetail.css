@@ -1,0 +1,31 @@
+.profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.tag {
+    color: #007bff;
+    margin-right: 5px;
+}
+.comment-img {
+    width: 80px;
+    cursor: pointer;
+}
+.btn-icon {
+    border: none;
+    background: none;
+}
+.page-form .form{
+    padding: 40px;
+    border: 1px solid #e6e6e6;
+    margin-top: 28px;
+    border-radius: 4px;
+}
+
+.manage{
+    display: flex;
+}
+.manage > div{
+    margin-left:auto;
+}

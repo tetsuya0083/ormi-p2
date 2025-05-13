@@ -52,7 +52,6 @@ public class UserController {
         Path fullPath = uploadDir.resolve(filename);  // uploads/파일명 전체 경로
         profileImage.transferTo(fullPath.toFile());   // 절대 경로 넘김!
 
-        // 클라이언트가 접근할 수 있는 URL 생성
         String imageUrl = "/images/" + filename;
 
         userService.signUp(request, imageUrl);
@@ -85,19 +84,18 @@ public class UserController {
             Path uploadDir = Paths.get(System.getProperty("user.dir"), "uploads"); // 현재 프로젝트 기준 절대 경로
             Files.createDirectories(uploadDir);
 
+            // 클라이언트가 접근할 수 있는 URL 생성
             Path fullPath = uploadDir.resolve(filename);  // uploads/파일명 전체 경로
             profileImage.transferTo(fullPath.toFile());   // 절대 경로 넘김!
 
-            // 클라이언트가 접근할 수 있는 URL 생성
             String imageUrl = "/images/" + filename;
-
             request.setProfileImageUrl(imageUrl);
         }
 
+        // 로그인된 사용자 정보(UserDetails updateUser) 수동 갱신
         User updatedUser = userService.modifyUser(request, userId);  // 프로필 업데이트 후의 user 객체
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        // 로그인된 사용자 정보(UserDetails updateUser) 수동 갱신
         Authentication newAuth = new UsernamePasswordAuthenticationToken(
                 updatedUser,
                 authentication.getCredentials(),
@@ -108,4 +106,5 @@ public class UserController {
 
         return "redirect:/profile";
     }
+
 }

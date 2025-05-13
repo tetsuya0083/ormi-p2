@@ -1,6 +1,7 @@
 package com.estsoft.ormi_p2.domain;
 
 import com.estsoft.ormi_p2.dto.PostResponse;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -43,6 +44,11 @@ public class Post {
 
     @Column(name = "likes_count", nullable = false, columnDefinition = "int default 0")
     private int likesCount = 0;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostLikes> postLikes = new ArrayList<>();
+
+    private int viewCount = 0;
 
     @Column(name = "comments_count", nullable = false, columnDefinition = "int default 0")
     private int commentsCount = 0;
@@ -93,38 +99,55 @@ public class Post {
         this.user = user;
     }
 
-    // update 메서드
-    public void update(String title, String content, Category category, Difficulty difficulty, List<Tag> tags, boolean isPublic) {
+    public Long getId() {
+        return postId;  // postId를 반환
+    }
+
+    public int getLikesCount() {
+        return likesCount;
+    }
+
+    public int getCommentsCount() {
+        return commentsCount;
+    }
+
+    public List<Tag> getTags() {
+        return postKeywords.stream()
+                .map(PostKeyword::getTag)
+                .collect(Collectors.toList());
+    }
+
+    public void setDifficultyBasedOnCategory(Difficulty difficulty) {
+        if (category != null && category == Category.SHARE) {
+            // share 카테고리일 경우 난이도를 설정
+            this.difficulty = difficulty;  // 사용자가 입력한 난이도 값으로 설정
+        } else {
+            this.difficulty = null;  // 다른 카테고리에서는 난이도를 null로 설정
+        }
+    }
+
+    public User getAuthor() {
+        return this.user;
+    }
+
+    public void update(String title, String content) {
         this.title = title;
         this.content = content;
-        this.category = category;
-        this.difficulty = difficulty;
-        if (tags != null) {
-            for (Tag tag : tags) {
-                this.postKeywords.add(new PostKeyword(this, tag, 1L));
-            }
-        }
-        this.isPublic = isPublic;
     }
 
     public PostResponse toDto() {
         return new PostResponse(this);
     }
 
-    public Long getId() {
-        return postId;  // postId를 반환
+    public String getThumbnailUrl() {
+        if (images == null || images.isEmpty()) return null;
+
+        return images.stream()
+                .filter(PostImage::isRepresentImageYn) // 대표 이미지인 경우
+                .map(PostImage::getImageUrl)
+                .findFirst()
+                .orElse(images.get(0).getImageUrl());  // 없다면 첫 번째 이미지
     }
 
-    public String getTagsAsString() {
-        return postKeywords.stream()
-                .map(pk -> pk.getTag().getName())
-                .collect(Collectors.joining(", "));
-    }
-
-    public List<Tag> getTags() {
-        return postKeywords.stream()
-                .map(PostKeyword::getTag) // Assuming PostKeyword has a 'getTag()' method
-                .collect(Collectors.toList());
-    }
 
 }

@@ -6,8 +6,8 @@ document.getElementById('signupForm').addEventListener('submit', function (e) {
 
     // 체크박스는 선택된 경우에만 값이 전송되므로 명시적으로 확인
     if (!form.agree.checked) {
-    alert("약관에 동의해주세요.");
-    return;
+        alert("약관에 동의해주세요.");
+        return;
     }
 
     fetch('/user', {
@@ -16,8 +16,8 @@ document.getElementById('signupForm').addEventListener('submit', function (e) {
             'X-CSRF-TOKEN': formData.get('_csrf')
         },
         body: formData
-        })
-        .then(response => {
+
+    }).then(response => {
             if (!response.ok) {
                 return response.text().then(errorMessage => {
                     alert(errorMessage);  // 여기서 브라우저 alert 발생
