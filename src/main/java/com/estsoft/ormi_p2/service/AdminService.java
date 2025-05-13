@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
@@ -58,6 +57,7 @@ public class AdminService {
         userRepository.save(user);
     }
 
+
     public Page<Post> findPosts(Pageable pageable) {
         return postRepository.findAll(pageable);
     }
@@ -76,16 +76,6 @@ public class AdminService {
         existing.setDifficulty(updatedPost.getDifficulty());
 
     }
-
-
-
-
-
-
-
-
-
-
 
 
 }

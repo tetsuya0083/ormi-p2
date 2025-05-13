@@ -1,5 +1,6 @@
 package com.estsoft.ormi_p2.controller;
 
+
 import com.estsoft.ormi_p2.domain.Post;
 import com.estsoft.ormi_p2.domain.User;
 import com.estsoft.ormi_p2.dto.AdminPromoteDto;
@@ -7,6 +8,7 @@ import com.estsoft.ormi_p2.service.AdminService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
@@ -105,6 +107,7 @@ public class AdminController {
         adminService.updatePost(postId, updatedPost);
         return "redirect:/admin/posts";
     }
+
 
 
 
