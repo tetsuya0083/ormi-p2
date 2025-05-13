@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta property="og:title" content="냉장고를 부탁해 - 맛있는 요리 레시피와 커뮤니티">
+    <meta property="og:description" content="냉장고를 부탁해 블로그에서 다양한 요리 레시피와 음식 관련 커뮤니티 정보를 만나보세요.">
+    <meta property="og:image" content="이미지 URL">
+    <meta property="og:url" content="페이지 URL">
+
+    <title>냉장고를 부탁해 - 커뮤니티</title>
+    <!-- 공통 스타일시트 -->
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/reset.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+
+    <!-- Bootstrap CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Tagify 스타일 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css">
+    <!-- Summernote 스타일 -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+
+    <!-- 페이지 스타일시트 -->
+    <link rel="stylesheet" th:href="@{/css/newPost.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="content">
+    <div class="container">
+        <div class="page-form">
+            <div class="title-area">
+                <h1>게시글 작성하기</h1>
+            </div>
+            <!--enctype="multipart/form-data"-->
+            <form th:action="@{/new-post}" th:object="${post}" method="post" enctype="multipart/form-data">
+                <input type="hidden" id="postId" th:value="${post.id}" />
+                <div class="mb-3">
+                    <label for="title" class="form-label">제목</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="제목을 입력하세요" th:value="${post.title}">
+                </div>
+
+                <div class="mb-3">
+                    <label for="category" class="form-label">카테고리</label>
+                    <select class="form-control" id="category" name="category">
+                        <option value="" disabled selected>카테고리 선택</option>
+                        <option th:each="category : ${categories}"
+                                th:value="${category}"
+                                th:text="${category.getDisplayName()}"></option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="imageInput">
+                        대표이미지 업로드
+                        <div id="imagePreview" class="image-upload-box"></div>
+                    </label>
+                    <input type="file" id="imageInput" name="imageInput" accept="image/*" style="display: none;" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="summernote" class="form-label">내용</label>
+                    <textarea class="form-control" id="summernote" name="content" rows="5" th:text="${post.content}"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="tag-input" class="form-label">태그</label>
+                    <input name="tags" id="tag-input" placeholder="#해시태그를 입력하세요" class="form-control" th:value="${post.tags}" maxlength="10">
+                    <p class="sub-info">태그는 최대 5개, 10자 이하 입력 가능, 중복 불가합니다.</p>
+                </div>
+
+                <div class="mb-3" id="difficulty-section" th:style="${(post.category != null and post.category.toString() == 'SHARE') ? '' : 'display:none;'}">
+                    <label class="form-label d-block">난이도</label>
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-outline-primary">
+                            <input type="radio" name="difficulty" th:id="'difficulty1'" th:value="'HARD'" autocomplete="off"> 상
+                        </label>
+                        <label class="btn btn-outline-primary">
+                            <input type="radio" name="difficulty" th:id="'difficulty2'" th:value="'MEDIUM'" autocomplete="off"> 중
+                        </label>
+                        <label class="btn btn-outline-primary">
+                            <input type="radio" name="difficulty" th:id="'difficulty3'" th:value="'EASY'" autocomplete="off"> 하
+                        </label>
+                    </div>
+                </div>
+
+                <button th:if="${post.id} != null" type="submit" id="modify-btn" class="btn btn-primary btn-sm">수정</button>
+                <button th:if="${post.id} == null" type="submit" id="create-btn" class="btn btn-primary write-button btn-sm">등록</button>
+            </form>
+        </div>
+    </div>
+</main>
+
+                <div th:replace="~{fragments/footer :: footer}"></div>
+
+                <!-- jQuery (필수) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Popper.js (필수) -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<!-- Bootstrap 4 JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Tagify JS -->
+<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+
+<!-- Summernote JS -->
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/lang/summernote-ko-KR.min.js"></script>
+
+<script src="/js/header.js" defer></script>
+<script src="/js/newPost.js" defer></script>
+</body>
+</html>
