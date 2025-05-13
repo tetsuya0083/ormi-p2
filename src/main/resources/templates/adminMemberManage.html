@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 관리</title>
+    <link rel="stylesheet" href="/css/adminStyle.css">
+</head>
+<body>
+<div class="member-management">
+    <h2>회원 목록</h2>
+
+    <!-- 검색 폼 -->
+    <form th:action="@{/admin/members}" method="get">
+        <input type="text" name="keyword" th:value="${keyword}" placeholder="닉네임 검색">
+        <button type="submit">검색</button>
+    </form>
+
+    <!-- 회원 테이블 -->
+    <table>
+        <thead>
+        <tr>
+            <th>UID</th>
+            <th>프로필</th>
+            <th>ID</th>
+            <th>가입일</th>
+            <th>작성 글 수</th>
+            <th>댓글 수</th>
+            <th>활동 점수</th>
+            <th>회원 등급</th>
+            <th>상세보기</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users.content}">
+            <td th:text="${user.userId}"></td>
+            <td><img th:src="@{${user.profileImageUrl}}" alt="profile" width="40" height="40"/></td>
+            <td th:text="${user.loginId}"></td>
+            <td th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd')}"></td>
+            <td th:text="${user.postsCount}"></td>
+            <td th:text="${user.commentsCount}"></td>
+            <td th:text="${user.points}"></td>
+            <td th:text="${user.userLevel.displayName}"></td>
+            <td><a th:href="@{'/admin/members/' + ${user.userId}}">상세</a></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- 페이지네이션 -->
+    <div class="pagination">
+        <a th:href="@{|/admin/members?page=${users.number - 1}|}" th:if="${users.hasPrevious()}">← Prev</a>
+        <span th:text="${users.number + 1}">1</span>
+        <a th:href="@{|/admin/members?page=${users.number + 1}|}" th:if="${users.hasNext()}">Next →</a>
+    </div>
+</div>
+</body>
+</html>

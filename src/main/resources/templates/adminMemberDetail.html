@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>회원 상세 정보</title>
+  <link rel="stylesheet" href="/css/adminStyle.css">
+</head>
+<body>
+<h2>회원 상세 정보</h2>
+
+<form th:action="@{'/admin/members/' + ${user.userId}}" method="post">
+  <div>
+    <label>회원 ID:</label>
+    <span th:text="${user.userId}"></span>
+  </div>
+
+  <div>
+    <label>로그인 ID:</label>
+    <span th:text="${user.loginId}"></span>
+  </div>
+
+  <div>
+    <label>닉네임:</label>
+    <input type="text" name="nickname" th:value="${user.nickname}" required/>
+  </div>
+
+  <div>
+    <label>회원 등급:</label>
+    <select name="userLevel">
+      <option th:each="level : ${T(com.estsoft.ormi_p2.domain.User.Level).values()}"
+              th:value="${level.name()}"
+              th:text="${level.displayName}"
+              th:selected="${level == user.userLevel}">
+      </option>
+    </select>
+  </div>
+
+  <div>
+    <label>상태:</label>
+    <select name="status">
+      <option th:each="status : ${T(com.estsoft.ormi_p2.domain.User.UserStatus).values()}"
+              th:value="${status.name()}"
+              th:text="${status.displayName}"
+              th:selected="${status == user.status}">
+      </option>
+    </select>
+  </div>
+
+  <div>
+    <label>포인트:</label>
+    <input type="number" name="points" th:value="${user.points}" />
+  </div>
+
+  <button type="submit">저장</button>
+  <a th:href="@{/admin/members}">목록으로</a>
+</form>
+</body>
+</html>
