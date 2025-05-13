@@ -2,9 +2,17 @@ package com.estsoft.ormi_p2.service;
 
 import com.estsoft.ormi_p2.domain.*;
 import com.estsoft.ormi_p2.dto.AddPostRequest;
+import com.estsoft.ormi_p2.dto.PostResponse;
+import com.estsoft.ormi_p2.dto.PostViewDto;
+import com.estsoft.ormi_p2.dto.UpdatePostRequest;
 import com.estsoft.ormi_p2.exception.NotExistsIdException;
 import com.estsoft.ormi_p2.repository.*;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,47 +33,48 @@ public class PostService {
     private final PostImageRepository postImageRepository;
     private final TagService tagService;
     private final PostKeywordRepository postKeywordRepository;
+    private final TagRepository tagRepository;
+    private final UserService userService;
 
     @Autowired
     public PostService(UserRepository userRepository,
                        PostRepository postRepository,
                        PostImageRepository postImageRepository,
                        PostKeywordRepository postKeywordRepository,
-                       TagService tagService) {
+                       TagService tagService, UserService userService,
+                       TagRepository tagRepository) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.postImageRepository = postImageRepository;
         this.postKeywordRepository = postKeywordRepository;
         this.tagService = tagService;
+        this.userService = userService;
+        this.tagRepository = tagRepository;
     }
 
     @Transactional
     public void createPost(AddPostRequest request) {
         Category category = Category.valueOf(request.getCategory());
         Difficulty difficulty = processDifficulty(category, request.getDifficulty());
+        User user = userService.getCurrentUser();
 
         Post post = new Post();
         post.setTitle(request.getTitle());
         post.setCategory(category);
         post.setContent(request.getContent());
         post.setDifficulty(difficulty);
-
-        User user = userRepository.findByUserId(1L).orElse(new User());
         post.setUser(user);
 
         Post savedPost = postRepository.save(post);
 
-        // 대표 이미지 저장
         savePostImage(savedPost, request.getRepresentImageUrl(), true);
 
-        // 일반 이미지들 저장
         if (request.getImageUrl() != null && !request.getImageUrl().isEmpty()) {
             for (String imageUrl : request.getImageUrl()) {
                 savePostImage(savedPost, imageUrl, false);
             }
         }
 
-        // 태그 저장 (기존 태그 재사용 X)
         Long keywordId = 1L;
         if (request.getTags() != null && !request.getTags().isEmpty()) {
             for (String tagName : request.getTags()) {
@@ -80,26 +89,28 @@ public class PostService {
 
     @Transactional
     public Post savePost(String title, String content, String category,
-                         String difficulty, String tagString, MultipartFile image) {
+                         String difficulty, String tagString, MultipartFile image, User user) {
         Category categoryEnum = Category.valueOf(category.toUpperCase());
         Difficulty difficultyEnum = processDifficulty(categoryEnum, difficulty);
 
-        List<Tag> tagList = processTags(Collections.singletonList(tagString));
-
-        User user = getUserInfo();
+        List<Tag> tagList = processTags(Arrays.asList(tagString.split(",")));
 
         Post post = new Post(title, content, categoryEnum, difficultyEnum, tagList, user);
         Post savedPost = postRepository.save(post);
 
         Long keywordId = 1L;
-        // 태그와 게시글의 관계 처리 (PostKeyword 생성)
+
         for (Tag tag : tagList) {
             PostKeyword postKeyword = new PostKeyword(savedPost, tag, keywordId);
             postKeywordRepository.save(postKeyword);  // PostKeyword 저장
         }
 
         // 이미지 저장
-        savePostImage(savedPost, image, false);  // 이미지가 있을 때만 저장
+        if (image != null) {
+            savePostImage(savedPost, image, false);  // 이미지가 있을 때만 저장
+        }
+
+        post.setDifficultyBasedOnCategory(post.getDifficulty());
 
         return savedPost;
     }
@@ -116,6 +127,7 @@ public class PostService {
         }
     }
 
+    // 게시글 이미지 저장
     private void savePostImage(Post savedPost, String imageUrl, boolean isRepresentative) {
         // 이미지가 없을 경우 기본 이미지 사용
         if (imageUrl == null || imageUrl.isEmpty()) {
@@ -132,6 +144,7 @@ public class PostService {
         postImageRepository.save(postImage);
     }
 
+    // MultipartFile 이미지 저장
     private void savePostImage(Post savedPost, MultipartFile image, boolean isRepresentative) {
         // 이미지가 없을 경우 기본 이미지 사용
         String imageUrl = (image == null || image.isEmpty()) ? "/img/default-thumbnail.jpg" : saveImageToFile(image);
@@ -183,8 +196,66 @@ public class PostService {
         return tagList;
     }
 
-    private User getUserInfo() {
-        return userRepository.findById(1L)
-                .orElseThrow(() -> new NotExistsIdException(1L));
+    // post 단건 조회 id 기준으로 조회
+    public Post getPost(Long id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("no exists id: " + id));
     }
+
+
+    public void incrementViewCount(Long postId) {
+        Post post = getPost(postId);
+        post.setViewCount(post.getViewCount() + 1);
+        postRepository.save(post);
+    }
+
+    // 게시글 수정
+    @Transactional
+    public Post updatePost(Long id, UpdatePostRequest request) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new NotExistsIdException(id)); // 500 Error
+
+        post.update(request.getTitle(), request.getContent());
+
+        post.setCategory(Category.valueOf(request.getCategory())); // 카테고리 업데이트
+        post.setDifficulty(
+                request.getDifficulty() != null ? Difficulty.valueOf(request.getDifficulty()) : null
+        );
+
+        List<PostKeyword> newPostKeywords = request.getTags().stream()
+                .map(tagName -> {
+                    Tag tag = tagRepository.findByTag(tagName)
+                            .orElseGet(() -> tagRepository.save(new Tag(tagName))); // 없으면 새로 생성
+                    return new PostKeyword(post, tag, 1L); // 1L은 기본 weight 예시
+                })
+                .collect(Collectors.toList());
+
+        post.getPostKeywords().clear();
+        post.getPostKeywords().addAll(newPostKeywords);
+
+        List<PostImage> newImages = request.getImageUrl().stream()
+                .map(url -> new PostImage(url, post)) // 새 이미지를 생성
+                .collect(Collectors.toList());
+
+        post.getImages().clear();
+        post.getImages().addAll(newImages);
+
+        if (!newImages.isEmpty()) {
+            post.setImages(newImages.get(0).getUrl()); // 첫 번째 이미지를 대표 이미지로 설정
+        }
+
+        // 변경된 게시글 저장
+        return postRepository.save(post);
+    }
+
+    // 게시글 삭제
+    public void deletePost(Long postId) {
+        postRepository.deleteById(postId);
+    }
+
+    public Page<Post> getPostsByCategory(String category, PageRequest pageRequest) {
+        return postRepository.findByCategory(category, pageRequest);  // 카테고리 필터링
+    }
+
+
 }

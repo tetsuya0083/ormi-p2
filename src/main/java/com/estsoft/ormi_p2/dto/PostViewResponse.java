@@ -1,9 +1,6 @@
 package com.estsoft.ormi_p2.dto;
 
-import com.estsoft.ormi_p2.domain.Category;
-import com.estsoft.ormi_p2.domain.Post;
-import com.estsoft.ormi_p2.domain.PostImage;
-import com.estsoft.ormi_p2.domain.Tag;
+import com.estsoft.ormi_p2.domain.*;
 import jakarta.persistence.EntityListeners;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,39 +19,64 @@ public class PostViewResponse {
     private String title;
     private String content;
     private Category category;
-    private String difficulty;
-
+    private Difficulty difficulty;
+    private LocalDateTime createdAt;
+    private String thumbnailUrl;
     private List<String> tags;
 
-    private LocalDateTime createdAt;
+    // 작성자 정보
+    private String nickname;
+    private String userLevel;
+    private String profileImageUrl;
 
-    private String thumbnailUrl;
+    private int likesCount;
+    private boolean likesStatus;
+    private int viewCount;
+    private int commentsCount;
+
+    private String representImageUrl; // 추가: 대표 이미지 URL
 
     public PostViewResponse(Post post) {
         this.id = post.getId();
         this.title = post.getTitle();
-        this.category = post.getCategory();
         this.content = post.getContent();
+        this.category = post.getCategory();
         this.createdAt = post.getCreatedAt();
+        this.likesStatus = likesStatus;
+        // 난이도
+        this.difficulty = post.getDifficulty();
 
-        // difficulty가 null일 경우 기본값을 할당 (예: "없음")
-        this.difficulty = post.getDifficulty() != null ? post.getDifficulty().toString() : "없음";
-
-        // 썸네일 URL 처리
+        // 썸네일 이미지
         this.thumbnailUrl = post.getImages().stream()
-                // .filter(PostImage::isRepresentImageYn)  // 주석 활성화 시 필요
                 .map(PostImage::getImageUrl)
                 .findFirst()
                 .orElse("/img/default-thumbnail.jpg");
 
-        // tags가 null이거나 비어 있을 경우 빈 리스트로 초기화
+        // 대표 이미지 URL 추가
+        this.representImageUrl = post.getImages().stream()
+                .filter(Objects::nonNull)
+                .map(PostImage::getImageUrl)
+                .findFirst()
+                .orElse(null);
+
+        // 태그 목록
         this.tags = post.getTags() != null && !post.getTags().isEmpty()
                 ? post.getTags().stream()
-                .filter(Objects::nonNull)  // null 태그 객체 제거
+                .filter(Objects::nonNull)
                 .map(Tag::getName)
-                .filter(Objects::nonNull)  // Tag의 name이 null인 경우도 제거
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList())
-                : List.of();  // 태그가 없을 경우 빈 리스트
+                : List.of();
+
+        // 작성자 정보
+        User user = post.getUser();
+        this.nickname = user.getNickname();
+        this.userLevel = user.getUserLevel() != null ? user.getUserLevel().getDisplayName() : "텅빈 냉장고 요정";
+        this.profileImageUrl = user.getProfileImageUrl() != null ? user.getProfileImageUrl() : "/img/default-profile.png";
+
+        this.likesCount = post.getLikesCount();
+        this.viewCount = post.getViewCount();
+        this.commentsCount = post.getCommentsCount();
     }
 
     @Override
@@ -63,7 +85,11 @@ public class PostViewResponse {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
-                // 필요한 다른 필드들 추가...
+                ", nickname='" + nickname + '\'' +
+                ", likesCount=" + likesCount +
+                ", likesStatus=" + likesStatus +
+                ", commentsCount=" + commentsCount +
+                ", representImageUrl='" + representImageUrl + '\'' +
                 '}';
     }
 }

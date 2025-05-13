@@ -35,7 +35,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(auth ->              // 인증, 인가 설정
-                        auth.requestMatchers("/", "/login", "/signup", "/user", "/new-post", "/posts", "/api/posts/**").permitAll()
+                        auth.requestMatchers("/", "/login", "/signup", "/user", "/api/posts/**").permitAll()
                                 .requestMatchers("/new-article").hasRole("ADMIN")  // ROLE_ADMIN
                                 .anyRequest().authenticated())
                 .formLogin(auth -> auth.loginPage("/login")     // 폼 기반 로그인 설정
@@ -46,7 +46,6 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .csrf(AbstractHttpConfigurer::disable);                  // csrf 비활성화
         return httpSecurity.build();
     }
-
 
 
     // 패스워드 인코더로 사용할 빈 등록

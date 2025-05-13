@@ -85,7 +85,9 @@
     color: #666;
     line-height: 1.4;
     margin-bottom: 0.6rem;
-    white-space: nowrap;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -121,6 +123,18 @@
     align-items: center;
     gap: 12px;
     padding: 12px;
+}
+
+.card-footer .profile-info .profile-img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.card-footer .profile-info .profile-img img{
+    object-fit: cover;
+    height: 100%;
 }
 
 .card-footer .profile-info .nickname{

@@ -1,24 +1,26 @@
 package com.estsoft.ormi_p2.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @Entity
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
     private Long userId;
 
     @Column(nullable = false, unique = true)
@@ -41,8 +43,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String phoneNum;
 
-    @Column
-    @CreatedDate
+    @Column(insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Column
@@ -107,28 +108,35 @@ public class User implements UserDetails {
     @Column
     private int commentsCount;
 
-    @Column(nullable = false)
+    @Column(insertable = false, updatable = false)
     private LocalDateTime recentlyLogin;
 
     @Column(nullable = false)
     private String profileImageUrl;
 
-    @Column(nullable = false)
+    @Column(insertable = false, updatable = false)
     private LocalDateTime updatedAt;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<Post> posts = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostLikes> postLikes = new ArrayList<>();
 
     public User(String loginId, String password, String nickname,
                 String phoneNum, int loginCount, String email,
-                LocalDateTime recentlyLogin, String profileImageUrl,
-                LocalDateTime updatedAt) {
+                String profileImageUrl, Role role, Level level) {
         this.loginId = loginId;
         this.password = password;
         this.nickname = nickname;
         this.phoneNum = phoneNum;
         this.loginCount = loginCount;
         this.email = email;
-        this.recentlyLogin = recentlyLogin;
         this.profileImageUrl = profileImageUrl;
-        this.updatedAt = updatedAt;
+        this.role = role;
+        this.userLevel = level;
     }
 
 
@@ -139,7 +147,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return loginId;
     }
 
     @Override
