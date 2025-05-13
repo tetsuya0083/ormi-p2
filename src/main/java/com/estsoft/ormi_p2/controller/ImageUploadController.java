@@ -1,5 +1,6 @@
 package com.estsoft.ormi_p2.controller;
 
+import com.estsoft.ormi_p2.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 public class ImageUploadController {
+    private final ImageService imageService;
     private static final String UPLOAD_DIR = "/uploads/posts";
 
     @Value("${file.upload-dir}")
