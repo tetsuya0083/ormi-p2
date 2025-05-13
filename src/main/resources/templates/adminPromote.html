@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>관리자 권한 부여</title>
+</head>
+<body>
+<h2>관리자로 전환</h2>
+<form method="POST" action="/admin/promote">
+  <label>아이디: <input type="text" name="loginId" required></label><br>
+  <label>이메일: <input type="email" name="email" required></label><br>
+  <label>전화번호: <input type="text" name="phoneNum" required></label><br>
+  <button type="submit">관리자 전환</button>
+</form>
+
+<p style="color: green;" th:text="${message}"></p>
+<p style="color: red;" th:text="${error}"></p>
+</body>
+</html>

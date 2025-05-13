@@ -1,5 +1,6 @@
 package com.estsoft.ormi_p2.config;
 
+import com.estsoft.ormi_p2.handler.LoginSuccessHandler;
 import com.estsoft.ormi_p2.service.UserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,10 +13,12 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class WebSecurityConfig {
-    private UserDetailService userDetailService;
+    private final UserDetailService userDetailService;
+    private final LoginSuccessHandler loginSuccessHandler;
 
-    public WebSecurityConfig(UserDetailService userDetailService) {
+    public WebSecurityConfig(UserDetailService userDetailService, LoginSuccessHandler loginSuccessHandler) {
         this.userDetailService = userDetailService;
+        this.loginSuccessHandler = loginSuccessHandler;
     }
 
     @Bean
@@ -27,12 +30,12 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(auth ->              // 인증, 인가 설정
-                        auth.requestMatchers("/", "/login", "/signup", "/user",
+                        auth.requestMatchers("/", "/login", "/signup", "/user", "/admin/promote",
                                         "/api/nickname-check").permitAll()
-                                .requestMatchers("/admin").hasRole("ADMIN")  // ROLE_ADMIN
+                                .requestMatchers("/admin/members" ).hasRole("ADMIN")  // ROLE_ADMIN
                                 .anyRequest().authenticated())
                 .formLogin(auth -> auth.loginPage("/login")     // 폼 기반 로그인 설정
-                        .defaultSuccessUrl("/", true))
+                        .successHandler(loginSuccessHandler))
                 .logout(auth -> auth.logoutSuccessUrl("/") // 로그아웃 설정
                         .invalidateHttpSession(true)
                         .clearAuthentication(true))

@@ -38,10 +38,23 @@ LOG_FILE="$LOG_DIR/$(date '+%Y%m%d_%H%M').log"
 
 echo "Starting app..."
 nohup java -jar "$JAR_PATH" > "$LOG_FILE" 2>&1 &
-sleep 10 # 임시 코드, todo 추후 response loop check 방식으로 개선할 예정
 
 RES_CHK_URL="http://localhost:8080"
-HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" $RES_CHK_URL)
+MAX_ATTEMPTS=300
+ATTEMPT=0
+
+while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
+  HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$RES_CHK_URL")
+
+  if [ "$HTTP_CODE" -eq 200 ] || [ "$HTTP_CODE" -eq 404 ]; then
+    echo "Server responded with HTTP $HTTP_CODE after $ATTEMPT seconds"
+    break
+  fi
+
+  echo "Waiting for server... ($ATTEMPT sec)"
+  ATTEMPT=$((ATTEMPT + 1))
+  sleep 1
+done
 
 if [ "$HTTP_CODE" -eq 200 ] || [ "$HTTP_CODE" -eq 404 ]; then
   MESSAGE="✅ [Deploy Success!] jar: $JAR_PATH log: $LOG_FILE resp: $HTTP_CODE"
