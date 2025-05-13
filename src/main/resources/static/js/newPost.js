@@ -174,7 +174,7 @@ const modifyButton = document.getElementById('modify-btn');
 if (modifyButton) {
     modifyButton.addEventListener('click', event => {
         // 수정할 게시글의 ID 가져오기
-        const postId = document.getElementById('postId').value;  // 게시글 ID를 hidden 필드에서 가져옵니다.
+        const postId = document.getElementById('post-id').value;  // 게시글 ID를 hidden 필드에서 가져옵니다.
 
         // 카테고리와 이미지 파일을 포함하여 FormData로 전달
         const formData = new FormData();

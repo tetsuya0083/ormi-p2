@@ -27,15 +27,15 @@ document.getElementById("create-comment-btn").addEventListener("click", function
 
             // 2. 새 댓글을 HTML로 만들어서 추가
             const commentHtml = `
-            <div class="border-top pt-3">
-                <div class="d-flex align-items-center mb-2">
-                    <img src="${comment.profileImage || '/images/default-profile.jpg'}" class="profile-img mr-2" alt="프로필">
-                    <strong class="mr-2">${comment.nickname}</strong>
-                    <span class="mr-2 text-muted small">Lv.${comment.userLevel}</span>
-                    <span class="text-muted small">${comment.createdAtFormatted}</span>
+                <div class="border-top pt-3 pb-3">
+                    <div class="d-flex align-items-center mb-2">
+                        <img src="${comment.profileImage || '/images/default-profile.jpg'}" class="profile-img mr-2" alt="프로필">
+                        <strong class="mr-2">${comment.nickname}</strong>
+                        <span class="mr-2 text-muted small">Lv.${comment.userLevel}</span>
+                        <span class="text-muted small">${comment.createdAtFormatted}</span>
+                    </div>
+                    <div>${comment.content}</div>
                 </div>
-                <div>${comment.content}</div>
-            </div>
         `;
             document.getElementById("comments-container").insertAdjacentHTML("afterbegin", commentHtml);
         })

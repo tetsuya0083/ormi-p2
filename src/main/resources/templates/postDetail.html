@@ -83,7 +83,7 @@
                            th:data-likescount="${post.likesCount}"
                            th:class="${post.likesStatus} ? 'liked-button' : 'unliked-button'"
                            th:text="${post.likesStatus} ? '좋아요 취소 (' + ${post.likesCount} + ')' : '좋아요 (' + ${post.likesCount} + ')'"
-                           onclick="toggleLike(${post.id})">좋아요</a>
+                           th:onclick="toggleLike(${post.id})">좋아요</a>
                     </div>
                     <!-- 목록, 수정, 삭제 버튼 추가 -->
                 </div>
@@ -98,23 +98,6 @@
                     </div>
                 </div>
             </div>
-
-<!--            <div class="mb-5">-->
-<!--                <h5>댓글</h5>-->
-
-<!--                <form>-->
-<!--                    <div class="form-group">-->
-<!--                        <textarea class="form-control" rows="3" placeholder="댓글을 입력하세요."></textarea>-->
-<!--                    </div>-->
-<!--                    <div class="form-group">-->
-<!--                        <input type="file" class="form-control-file" multiple>-->
-<!--                        <small class="form-text text-muted">이미지 최대 10장 첨부 가능</small>-->
-<!--                    </div>-->
-<!--                    <button class="btn btn-success btn-sm">댓글 등록</button>-->
-<!--                </form>-->
-
-<!--                &lt;!&ndash; 댓글 예시 &ndash;&gt;-->
-<!--            </div>-->
             <section id="comments-section" th:style="'margin-top: 20px;'">
                 <div id="comments-container">
                     <!-- 댓글 목록이 여기에 동적으로 추가될 것입니다. -->
@@ -145,6 +128,10 @@
                     <div class="form-group">
                         <label for="comment">댓글 추가:</label>
                         <textarea class="form-control" id="comment" rows="3"></textarea>
+                        <div class="form-group">
+                            <input type="file" class="form-control-file" multiple>
+                            <small class="form-text text-muted">이미지 최대 10장 첨부 가능</small>
+                        </div>
                     </div>
                     <button type="button" class="btn btn-primary" id="create-comment-btn">댓글 작성</button>
                 </form>
