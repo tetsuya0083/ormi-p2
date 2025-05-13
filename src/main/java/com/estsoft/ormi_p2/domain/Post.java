@@ -139,4 +139,15 @@ public class Post {
         return new PostResponse(this);
     }
 
+    public String getThumbnailUrl() {
+        if (images == null || images.isEmpty()) return null;
+
+        return images.stream()
+                .filter(PostImage::isRepresentImageYn) // 대표 이미지인 경우
+                .map(PostImage::getImageUrl)
+                .findFirst()
+                .orElse(images.get(0).getImageUrl());  // 없다면 첫 번째 이미지
+    }
+
+
 }
