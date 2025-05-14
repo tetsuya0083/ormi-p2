@@ -57,11 +57,12 @@ public class PostPageController {
         return "newPost";
     }
 
-    // 게시글 목록 페이지 (GET)
+    // 게시글 목록 페이지 (GET) - 안쓰는듯함
     @GetMapping("/posts/list")
     public String showPostList(Model model) {
         List<Post> posts = postService.getAllPosts();
         model.addAttribute("posts", posts);
+
         return "postList";
     }
 
@@ -113,16 +114,14 @@ public class PostPageController {
         Page<PostViewResponse> paging = postService.getPostsByUserId(user.getUserId(), page);
         model.addAttribute("paging", paging);
 
-        if (user != null) {
-            model.addAttribute("user", user);
-        }
-
-        return "postList";
+        return "myPosts";
     }
 
     // 단건 조회 GET /posts/{id}
     @GetMapping("/posts/{postId}")
     public String showPostDetail(@PathVariable Long postId, @AuthenticationPrincipal User user, Model model) {
+        model.addAttribute("user", user);
+
         Post post = postService.getPost(postId);
         List<Comment> comments = commentService.findAll(postId);
         long likesCount = postLikeService.getLikeCount(postId);
@@ -154,6 +153,8 @@ public class PostPageController {
     public String editPost(@PathVariable Long postId,
                            Model model,
                            @AuthenticationPrincipal User user) throws AccessDeniedException {
+        model.addAttribute("user", user);
+
         Post post = postService.getPost(postId);
 
         // 작성자 확인 (userId 비교)

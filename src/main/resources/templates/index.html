@@ -35,16 +35,20 @@
             <h3 class="section-title">인기글</h3>
             <div class="cards-container">
                 <div class="card" th:each="post : ${likedPosts}">
-                    <a th:href="@{'/posts/' + ${post.id}}" class="card-link">
+                    <a th:href="@{/posts/{id}(id=${post.id})}" class="card-link">
                         <div class="card-thumb">
-                            <img th:src="${post.thumbnailUrl}" alt="썸네일" />
+                            <img th:src="${post.thumbnailUrl}" alt="썸네일"/>
                             <span class="card-category" th:text="${post.category.displayName}">카테고리</span>
                         </div>
                         <div class="card-content">
                             <h3 class="card-title" th:text="${post.title}">제목</h3>
                             <p class="card-desc" th:text="${post.content}">내용 요약</p>
                             <div class="post-stats">
-                                <span class="date" th:text="${post.createdAt}"></span>
+                                <!-- 변경된 부분: #dates → #temporals -->
+                                <span class="date"
+                                      th:text="${#temporals.format(post.createdAt, 'yyyy.MM.dd')}">
+                                    2025.05.13
+                                </span>
                                 <span class="views">좋아요 0 · 댓글 수 0</span>
                             </div>
                             <div class="card-tags">
@@ -53,17 +57,36 @@
                         </div>
                         <div class="card-footer">
                             <div class="profile-info">
-                                <img th:src="${post.profileImageUrl}" alt="프로필 이미지" class="profile-img">
+                                <img th:src="${post.profileImageUrl}"
+                                     alt="프로필 이미지"
+                                     class="profile-img"/>
                                 <div class="profile-text">
-                                    <div class="nickname" th:text="${post.nickname}"></div>
-                                    <div class="grade" th:text="${post.userGrade}"></div>
+                                    <div class="nickname" th:text="${post.nickname}">닉네임</div>
+                                    <div class="grade" th:text="${post.userLevel}">등급</div>
                                 </div>
                             </div>
                         </div>
                     </a>
-                    <button class="bookmark-btn" type="button">
-<!--                        <img th:src="${post.bookmarked} ? '/img/card_bookmark_on.png' : '/img/card_bookmark.png'" alt="북마크 이미지">-->
-                        <img src="/img/card_bookmark_on.png" alt="썸네일 북마크 이미지">
+<!--                    <button-->
+<!--                            class="bookmark-btn"-->
+<!--                            type="button"-->
+<!--                            th:attr="data-post-id=${post.id}">-->
+<!--                        <img-->
+<!--                                th:src="${#lists.contains(bookmarkedPostIds, post.id)}-->
+<!--                                   ? '/img/card_bookmark_on.png'-->
+<!--                                   : '/img/card_bookmark_off.png'"-->
+<!--                                alt="북마크 토글"/>-->
+<!--                    </button>-->
+
+                    <button
+                            class="bookmark-btn [[${#lists.contains(bookmarkedPostIds, post.id)} ? 'bookmarked' : '']]"
+                            type="button"
+                            th:data-post-id="${post.id}">
+                        <img
+                                th:src="${#lists.contains(bookmarkedPostIds, post.id)}
+            ? '/img/card_bookmark_on.png'
+            : '/img/card_bookmark_off.png'"
+                                alt="북마크 토글"/>
                     </button>
                 </div>
             </div>
@@ -80,7 +103,10 @@
                         <p class="post-title" th:text="${post.title}">게시글 제목</p>
                         <p class="post-desc" th:text="${post.content}">게시글 설명</p>
                     </div>
-                    <span class="date" th:text="${post.createdAt}">작성일</span>
+                    <span class="date"
+                          th:text="${#temporals.format(post.createdAt, 'yyyy.MM.dd')}">
+                        2025.05.13
+                    </span>
                 </li>
             </ul>
         </section>
@@ -92,5 +118,6 @@
 <div th:replace="~{fragments/footer :: footer}"></div>
 
 <script th:src="@{/js/header.js}" defer></script>
+<script th:src="@{/js/bookmark-toggle.js}" defer></script>
 </body>
 </html>

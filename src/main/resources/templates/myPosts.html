@@ -49,7 +49,7 @@
                                 <img th:src="${post.profileImageUrl}" alt="프로필 이미지" class="profile-img">
                                 <div class="profile-text">
                                     <div class="nickname" th:text="${post.nickname}"></div>
-                                    <div class="grade" th:text="${post.userGrade}"></div>
+                                    <div class="grade" th:text="${post.userLevel}"></div>
                                 </div>
                             </div>
                         </div>
@@ -70,7 +70,7 @@
                         <span>이전</span>
                     </a>
                 </li>
-                <li th:each="page: ${#numbers.sequence(0, (paging.totalPages)-1)}"
+                <li th:each="page: ${#numbers.sequence(1, (paging.totalPages))}"
                     th:if="${page >= (paging.number)-5 and page <= paging.number+5}"
                     th:classappend="${page == paging.number} ? 'active'"
                     class="page-item">

@@ -1,9 +1,6 @@
 package com.estsoft.ormi_p2.domain;
 
-import com.estsoft.ormi_p2.domain.Post;
-import com.estsoft.ormi_p2.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.*;
 

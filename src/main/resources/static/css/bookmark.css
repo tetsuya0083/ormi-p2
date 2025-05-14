@@ -1,0 +1,258 @@
+/* 북마크 페이지 전체 영역 정렬 및 높이 확보 */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main.content {
+    flex: 1;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* 푸터는 고정하지 않음 (본문 밀림 방지) */
+.footer {
+    position: static;
+}
+/* 검색 & 카테고리 */
+.controls {
+    margin: 2rem 0;
+}
+.controls form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 480px;
+}
+.search-group {
+    position: relative;
+}
+.search-box {
+    width: 100%;
+    height: 40px;
+    padding: 0 1rem 0 2.5rem;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    background: url("../img/search.png") no-repeat 12px center;
+    background-size: 16px;
+    font-size: 1rem;
+    color: #333;
+}
+
+/* 카테고리 */
+.category-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+.category-group label {
+    font-size: 0.875rem;
+    color: #344054;
+}
+.select-wrapper {
+    position: relative;
+}
+.category-select {
+    width: 100%;
+    height: 40px;
+    padding: 0 1rem;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    appearance: none;
+    background: #fff;
+    font-size: 1rem;
+    color: #333;
+}
+/* CSS-only 화살표 */
+.select-wrapper::after {
+    content: "▾";
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.8rem;
+    color: #666;
+    pointer-events: none;
+}
+
+/* 카드 그리드 */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* 카드(.card) 스타일 (index.css에서 복사) */
+.card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+.card-link {
+    color: inherit;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.card-thumb {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+}
+.card-thumb > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.card-category {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+.bookmark-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+.bookmark-btn img {
+    width: 24px;
+}
+.card-content {
+    padding: 1.6rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.card-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.4rem;
+}
+.card-desc {
+    font-size: 0.95rem;
+    color: #666;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.post-stats {
+    font-size: 0.8rem;
+    color: #999;
+    margin: 0.8rem 0;
+    display: flex;
+    gap: 0.8rem;
+}
+.card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+.tag {
+    font-size: 0.85rem;
+    color: #6941C6;
+}
+.card-footer {
+    padding: 0.6rem 1rem;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.profile-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.profile-img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.nickname {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #344054;
+}
+.grade {
+    font-size: 0.75rem;
+    color: #667085;
+}
+
+/* 페이징 */
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2rem 0;
+    padding: 0.5rem;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.page-link,
+.page-number {
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #344054;
+    transition: background-color 0.2s;
+    border: 1px solid transparent;
+}
+
+.page-link:hover,
+.page-number:hover {
+    background-color: #f2f4f7;
+}
+
+.page-number.active {
+    background-color: #7f56d9;
+    color: white;
+    border-color: #7f56d9;
+}
+
+.page-link.disabled {
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+.page-size-select select {
+    height: 34px;
+    padding: 0 0.5rem;
+    border: 1px solid #d0d5dd;
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+}
+
+
