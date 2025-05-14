@@ -265,8 +265,8 @@ http://13.209.91.65:8080/
 * **Backend**: Spring Boot, Spring Data JPA, Spring Security
 * **Frontend**: Thymeleaf, HTML/CSS, JavaScript (ES6)
 * **Database**: MySQL (AWS RDS)
-* **Build**: Maven
-* **Deploy**: AWS EC2
+* **Build**: gradle(github actions)
+* **Deploy**: AWS(EC2(Linux), SSM, S3)
 
 ---
 

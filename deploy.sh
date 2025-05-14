@@ -56,7 +56,7 @@ while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
   sleep 1
 done
 
-if [ "$HTTP_CODE" -eq 200 ] || [ "$HTTP_CODE" -eq 404 ]; then
+if [ "$HTTP_CODE" -eq 200 ] || [ "$HTTP_CODE" -eq 404 ] || [ "$HTTP_CODE" -eq 302 ]; then
   MESSAGE="✅ [Deploy Success!] jar: $JAR_PATH log: $LOG_FILE resp: $HTTP_CODE"
   echo "Deploy Success!"
 else
