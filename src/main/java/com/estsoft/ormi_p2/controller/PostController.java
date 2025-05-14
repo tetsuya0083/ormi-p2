@@ -1,7 +1,6 @@
 package com.estsoft.ormi_p2.controller;
 
 import com.estsoft.ormi_p2.domain.Category;
-import com.estsoft.ormi_p2.domain.Comment;
 import com.estsoft.ormi_p2.domain.Post;
 import com.estsoft.ormi_p2.domain.User;
 import com.estsoft.ormi_p2.dto.AddPostRequest;
@@ -57,6 +56,7 @@ public class PostController {
         return ResponseEntity.ok(new PostResponse(savedPost));
     }
 
+    // 게시글 리스트 조회
     @GetMapping
     public List<PostViewResponse> getPostList() {
         return postService.getAllPosts().stream()
@@ -64,6 +64,7 @@ public class PostController {
                 .collect(Collectors.toList());
     }
 
+    // 게시글 수정 페이지
     @GetMapping("/new-post")
     public String editPost(@RequestParam Long postId, Model model) {
         Post post = postService.getPost(postId);
@@ -71,14 +72,17 @@ public class PostController {
         return "newPost";
     }
 
+    // 게시글 수정 PUT
     @PutMapping("/{postId}")
     public ResponseEntity<PostResponse> updatePost(@PathVariable("postId") Long postId,
-                                                   @RequestBody UpdatePostRequest request) {
-        Post post = postService.updatePost(postId, request);
+                                                   @ModelAttribute UpdatePostRequest request,
+                                                   @RequestParam(value = "imageInput", required = false) MultipartFile image) {
+        Post post = postService.updatePost(postId, request, image);
         PostResponse response = post.toDto();
         return ResponseEntity.ok(response);
     }
 
+    // 게시글 삭제
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(@PathVariable Long postId, @AuthenticationPrincipal User user) {
         Post post = postService.getPost(postId);

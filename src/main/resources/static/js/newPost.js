@@ -13,17 +13,7 @@ $(document).ready(function () {
         height: 300,
         lang: 'ko-KR',
         placeholder: '내용을 입력하세요',
-        toolbar: [
-            ['fontname', ['fontname']],
-            ['fontsize', ['fontsize']],
-            ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
-            ['color', ['forecolor', 'color']],
-            ['table', ['table']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['height', ['height']],
-            ['insert', ['picture', 'link', 'video']],
-            ['view', ['fullscreen', 'help']]
-        ],
+        toolbar: [/* 생략 */],
         fontNames: ['Arial', '맑은 고딕', '궁서', '굴림체'],
         fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36', '50', '72'],
         callbacks: {
@@ -55,7 +45,7 @@ $(document).ready(function () {
         maxTags: maxTags,
         maxLength: 10,
         dropdown: { enabled: 0 },
-        transformTag: function(tagData) {
+        transformTag: function (tagData) {
             if (tagData.value.length > maxTagLength) {
                 alert(`태그는 최대 ${maxTagLength}자까지 입력할 수 있습니다.`);
                 tagData.value = tagData.value.substring(0, maxTagLength);
@@ -65,52 +55,55 @@ $(document).ready(function () {
     });
 
     tagify.on('add', e => {
-        const currentTags = tagify.value.map(tag => tag.value);
-        const tagCount = currentTags.length;
-
-        // 태그 개수 체크
+        const tagCount = tagify.value.length;
         if (tagCount > maxTags) {
             tagify.removeTag(e.detail.index);
             alert('태그는 최대 5개까지만 입력 가능');
-            return;
-        }
-
-        // 태그 길이 체크
-        if (e.detail.data.value.length > maxTagLength) {
-            tagify.removeTag(e.detail.index);
-            alert(`태그는 최대 ${maxTagLength}자까지만 입력 가능`);
-            return;
         }
     });
 
     // 대표 이미지 미리보기
-    if (imageInput && imagePreview) {
+    // 대표 이미지 미리보기
+    if (imageInput) {
         imageInput.addEventListener('change', function () {
             const file = this.files[0];
+            const uploadPreviewBox = document.getElementById('imagePreviewUpload');
+            const uploadPreviewImg = document.getElementById('imagePreviewImg');
+            const existingPreviewBox = document.getElementById('imagePreviewExisting');
 
             if (file && file.type.startsWith('image/')) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
-                    imagePreview.innerHTML = `<img src="${e.target.result}" alt="대표 이미지 미리보기">`;
-                    imagePreview.classList.add('has-image');
+                    if (uploadPreviewImg) {
+                        uploadPreviewImg.src = e.target.result;
+                        uploadPreviewBox.style.display = 'block';
+                    }
+
+                    // 기존 이미지가 있을 경우 숨기기
+                    if (existingPreviewBox) {
+                        existingPreviewBox.style.display = 'none';
+                    }
                 };
                 reader.readAsDataURL(file);
             } else {
-                imagePreview.innerHTML = '';
-                imagePreview.classList.remove('has-image');
+                // 이미지가 아닌 파일이거나 취소한 경우
+                if (uploadPreviewImg) {
+                    uploadPreviewImg.src = '';
+                    uploadPreviewBox.style.display = 'none';
+                }
+
+                if (existingPreviewBox) {
+                    existingPreviewBox.style.display = 'block';  // 기존 이미지 다시 보이기
+                }
             }
         });
     }
 
-    // 난이도 섹션 표시 제어
+
+    // 난이도 표시
     function toggleDifficultySection() {
         if (categorySelect && difficultySection) {
-            const selectedCategory = categorySelect.value;
-            if (selectedCategory === "SHARE") {
-                difficultySection.style.display = "block";
-            } else {
-                difficultySection.style.display = "none";
-            }
+            difficultySection.style.display = categorySelect.value === "SHARE" ? "block" : "none";
         }
     }
 
@@ -119,84 +112,68 @@ $(document).ready(function () {
         categorySelect.addEventListener("change", toggleDifficultySection);
     }
 
-    // 폼 제출 처리
+    // 작성 / 수정 통합 처리
     $('form').on('submit', function (e) {
         e.preventDefault();
 
         const form = e.target;
         const formData = new FormData(form);
-
+        const postId = $('#post-id').val();
         const title = $('#title').val().trim();
         const content = $('#summernote').summernote('code').trim();
         const category = $('#category').val();
+        const csrfToken = formData.get('_csrf');
 
-        // 필수 입력 항목 체크
         if (!title || !content || !category) {
             alert('제목, 내용, 카테고리는 필수 입력 항목입니다.');
             return;
         }
 
-        // SHARE 카테고리일 때 난이도 체크
-        if (category === "SHARE") {
-            const selectedDifficulty = $('input[name="difficulty"]:checked').val();
-            if (!selectedDifficulty) {
+        // 난이도 필수 체크
+        if (category === 'SHARE') {
+            const difficulty = $('input[name="difficulty"]:checked').val();
+            if (!difficulty) {
                 alert('난이도를 선택해 주세요.');
                 return;
             }
         }
 
-        fetch('/api/posts', {
-            method: 'POST',
+        formData.set('content', content);
+        formData.set('tags', JSON.stringify(tagify.value.map(tag => tag.value)));
+
+        const imageFile = document.getElementById('imageInput').files[0];
+        if (imageFile) {
+            formData.set('imageInput', imageFile);
+        }
+
+        const url = postId ? `/api/posts/${postId}` : '/api/posts';
+        const method = postId ? 'PUT' : 'POST';
+
+        fetch(url, {
+            method: method,
             headers: {
-                'X-CSRF-TOKEN': formData.get('_csrf') // CSRF 토큰을 헤더에 포함
+                'X-CSRF-TOKEN': csrfToken // CSRF 토큰을 헤더에 포함
             },
-            body: formData // formData를 body로 전송
+            body: formData
         })
             .then(response => {
                 if (response.ok) {
-                    alert('게시글이 저장되었습니다!'); // 성공 시 메시지 출력
-                    window.location.href = '/posts'; // 게시글 목록 페이지로 리디렉션
+                    if (postId) {
+                        alert('수정이 완료되었습니다!');
+                        window.location.href = `/posts/${postId}`;  // 수정된 게시글 상세 페이지로 이동
+                    } else {
+                        alert('게시글이 저장되었습니다!');
+                        window.location.href = '/posts';  // 게시글 목록 페이지로 이동
+                    }
                 } else {
                     return response.json().then(err => {
-                        throw new Error(err.message || '저장 중 오류가 발생했습니다.'); // 오류 메시지 처리
+                        throw new Error(err.message || '오류가 발생했습니다.');
                     });
                 }
             })
             .catch(error => {
                 console.error(error);
-                alert('저장 실패: ' + error.message); // 오류 메시지 출력
+                alert('처리 실패: ' + error.message);
             });
     });
 });
-
-const modifyButton = document.getElementById('modify-btn');
-
-if (modifyButton) {
-    modifyButton.addEventListener('click', event => {
-        // 수정할 게시글의 ID 가져오기
-        const postId = document.getElementById('post-id').value;  // 게시글 ID를 hidden 필드에서 가져옵니다.
-
-        // 카테고리와 이미지 파일을 포함하여 FormData로 전달
-        const formData = new FormData();
-        formData.append('title', document.getElementById('title').value);
-        formData.append('content', document.getElementById('summernote').value);
-        formData.append('category', document.getElementById('category').value);  // 카테고리 선택값
-        formData.append('imageInput', document.getElementById('imageInput').files[0]);  // 대표 이미지 파일
-
-        // Fetch API를 사용하여 PUT 요청을 보냄
-        fetch(`/api/posts/${postId}`, {
-            method: 'PUT',
-            body: formData,
-        }).then(response => {
-            if (response.ok) {
-                alert('수정 완료되었습니다');
-                location.replace(`/posts/${postId}`);  // 수정된 게시글 상세 페이지로 이동
-            } else {
-                alert('수정에 실패했습니다');
-            }
-        }).catch(error => {
-            console.error('Error:', error);
-            alert('서버 오류가 발생했습니다.');
-        });
-    });
-}

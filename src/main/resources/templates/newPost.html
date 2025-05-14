@@ -32,12 +32,10 @@
             <div class="title-area">
                 <h1>게시글 작성하기</h1>
             </div>
-            <!--enctype="multipart/form-data"-->
-            <form th:action="@{/new-post}" th:object="${post}" method="post" enctype="multipart/form-data">
-
-<!--                <input type="hidden" name="_csrf" value="${_csrf.token}" />-->
                 <input type="hidden" id="postId" th:value="${post.id}" />
-
+            <form th:action="${post.id} != null ? '/posts/' + ${post.id} : '/new-post'"
+                  method="post" th:object="${post}" enctype="multipart/form-data">
+                <input type="hidden" id="post-id" name="id" th:value="${post.id}" />
                 <div class="mb-3">
                     <label for="title" class="form-label">제목</label>
                     <input type="text" class="form-control" id="title" name="title" placeholder="제목을 입력하세요" th:value="${post.title}">
@@ -49,16 +47,24 @@
                         <option value="" disabled selected>카테고리 선택</option>
                         <option th:each="category : ${categories}"
                                 th:value="${category}"
-                                th:text="${category.getDisplayName()}"></option>
+                                th:text="${category.getDisplayName}"
+                                th:selected="${category} == ${post.category}"></option>
                     </select>
                 </div>
 
                 <div class="mb-3">
-                    <label for="imageInput">
-                        대표이미지 업로드
-                        <div id="imagePreview" class="image-upload-box"></div>
-                    </label>
-                    <input type="file" id="imageInput" name="imageInput" accept="image/*" style="display: none;" />
+                    <!-- 업로드 버튼 -->
+                    <label for="imageInput" class="btn btn-secondary">대표이미지 업로드</label>
+                    <!-- 기존 대표 이미지 (수정 페이지용) -->
+                    <div id="imagePreviewExisting" class="image-upload-box" th:if="${post != null and post.representImageUrl != null}">
+                        <img th:src="@{${post.representImageUrl}}" alt="기존 이미지" class="img-fluid"/>
+                    </div>
+                    <!-- 업로드 input -->
+                    <input type="file" id="imageInput" name="imageInput" accept="image/*" style="display: none;"/>
+                    <!-- 새로 업로드한 이미지 (작성용 또는 수정 시 새 이미지 미리보기용) -->
+                    <div id="imagePreviewUpload" class="image-upload-box" style="display: none;">
+                        <img id="imagePreviewImg" alt="대표 이미지 미리보기" class="img-fluid"/>
+                    </div>
                 </div>
 
                 <div class="mb-3">
@@ -73,7 +79,7 @@
                 </div>
 
 
-                <div class="mb-3" id="difficulty-section" th:attr="style=${post.category?.displayName() == 'SHARE'} ? '' : 'display:none;'">
+                <div class="mb-3" id="difficulty-section" th:attr="style=${post.category?.displayName == 'SHARE'} ? '' : 'display:none;'">
 <!--                <div class="mb-3" id="difficulty-section" th:style="${(post.category != null and post.category.toString() == 'SHARE') ? '' : 'display:none;'}">-->
                     <label class="form-label d-block">난이도</label>
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
@@ -89,14 +95,15 @@
                     </div>
                 </div>
 
-                <button th:if="${post.id} != null" type="button" id="modify-btn" class="btn btn-primary btn-sm">수정</button>
-                <button th:if="${post.id} == null" type="submit" id="create-btn" class="btn btn-primary write-button btn-sm">등록</button>
+                <button type="submit" class="btn btn-primary btn-sm"
+                        th:text="${post.id} != null ? '수정' : '등록'"></button>
             </form>
         </div>
+
     </div>
 </main>
 
-                <div th:replace="~{fragments/footer :: footer}"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 
                 <!-- jQuery (필수) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

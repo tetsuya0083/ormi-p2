@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +27,7 @@ public class CommentApiController {
     public ResponseEntity<Comment> save(
             @PathVariable Long postId,
             @Valid @RequestBody AddCommentRequest request,
-            @AuthenticationPrincipal User user // 인증된 User 객체를 자동으로 받아옴
+            @AuthenticationPrincipal User user
     ) {
         Comment savedComment = commentService.save(postId, request, user.getLoginId());
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -49,7 +48,7 @@ public class CommentApiController {
             @PathVariable Long postId,
             @PathVariable Long commentId,
             @RequestBody AddCommentRequest request,
-            @AuthenticationPrincipal User user // @AuthenticationPrincipal을 사용하여 User 객체를 받아옴
+            @AuthenticationPrincipal User user
     ) {
         Comment updated = commentService.update(postId, commentId, request, user.getLoginId()); // User 객체 전달
         return ResponseEntity.ok(updated);
@@ -58,7 +57,7 @@ public class CommentApiController {
     //댓글 삭제
     @DeleteMapping("/posts/{postId}/comments/{commentId}")
     public ResponseEntity<Long> delete(@PathVariable long postId, @PathVariable Long commentId, @AuthenticationPrincipal User user) {
-        commentService.delete(postId, commentId, user); // User 객체 전달
+        commentService.delete(postId, commentId, user);
         return ResponseEntity.ok(commentId);
     }
 

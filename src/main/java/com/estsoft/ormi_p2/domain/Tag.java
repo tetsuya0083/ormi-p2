@@ -40,7 +40,7 @@ public class Tag {
 
     public Tag(String tag) {
         if (tag != null && tag.length() > 10) {
-            this.tag = tag.substring(0, 10);  // 최대 길이 10으로 제한
+            this.tag = tag.substring(0, 10);
         } else {
             this.tag = tag;
         }
@@ -48,28 +48,7 @@ public class Tag {
 
     @Override
     public String toString() {
-        return this.tag;  // Tag 객체에서 반환되는 값은 tag 필드로 설정
+        return this.tag;
     }
-
-//    public void setTag(String tag) {
-//        if (tag.length() > 10) {
-//            System.out.println("태그 길이가 깁니다.");
-//            tag = tag.substring(0, 10); // 자동 보정
-//        }
-//        this.tag = tag;
-//    }
-//
-//    public Tag(String tag) {
-//        this.tag = tag;
-//    }
-//
-//    @Override
-//    public String toString() {
-//        return this.name;  // 이름만 반환
-//    }
-//
-//    public String getName() {
-//        return this.tag;
-//    }
 
 }

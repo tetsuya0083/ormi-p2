@@ -21,25 +21,24 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
     @JsonIgnore
-    private Post post; // 게시글과 연관
+    private Post post;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
-    private User user; // 댓글을 작성한 사용자
+    private User user;
 
     @Column(nullable = false)
-    private String content; // 댓글 내용
+    private String content;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt; // 댓글 작성 시간
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt; // 댓글 수정 시간
+    private LocalDateTime updatedAt;
 
-    private Boolean adopt = false; // 채택 여부 (기본값: false)
+    private Boolean adopt = false;
 
-    // 생성자
     @Builder
     public Comment(Post post, User user, String content) {
         this.post = post;
@@ -50,7 +49,6 @@ public class Comment {
         this.adopt = false; // 기본값 false
     }
 
-    // 댓글 수정 시 업데이트 시간 갱신
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();

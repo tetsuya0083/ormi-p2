@@ -6,6 +6,7 @@ import com.estsoft.ormi_p2.domain.User;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor

@@ -24,4 +24,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findByCategory(String category, Pageable pageable);
 
+
+    // 최신순으로 전체 게시글 반환
+    List<Post> findAllByOrderByCreatedAtDesc();
+
 }

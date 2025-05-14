@@ -55,14 +55,22 @@ public class PostViewResponse {
                 .findFirst()
                 .orElse("/img/default-thumbnail.jpg");
 
-        // 대표 이미지 URL 추가
-        this.representImageUrl = post.getImages().stream()
-                .filter(Objects::nonNull)
-                .map(PostImage::getImageUrl)
-                .findFirst()
-                .orElse(null);
+        if (post.getImages() != null && !post.getImages().isEmpty()) {
+            List<PostImage> images = post.getImages();
 
-        // 태그 목록
+            this.thumbnailUrl = images.stream()
+                    .filter(Objects::nonNull)
+                    .map(PostImage::getImageUrl)
+                    .findFirst()
+                    .orElse("/img/default-thumbnail.jpg");
+
+            this.representImageUrl = images.get(0).getImageUrl();
+        } else {
+            this.thumbnailUrl = "/img/default-thumbnail.jpg";
+            this.representImageUrl = null;
+        }
+
+        // 태그 목록 처리
         this.tags = post.getTags() != null && !post.getTags().isEmpty()
                 ? post.getTags().stream()
                 .filter(Objects::nonNull)
@@ -71,16 +79,15 @@ public class PostViewResponse {
                 .collect(Collectors.toList())
                 : List.of();
 
-        // 작성자 정보
         User user = post.getUser();
         this.nickname = user.getNickname();
         this.userLevel = user.getUserLevel() != null ? user.getUserLevel().getDisplayName() : "텅빈 냉장고 요정";
         this.profileImageUrl = user.getProfileImageUrl() != null ? user.getProfileImageUrl() : "/img/default-profile.png";
-
         this.likesCount = post.getLikesCount();
         this.viewCount = post.getViewCount();
         this.commentsCount = post.getCommentsCount();
     }
+
 
     @Override
     public String toString() {

@@ -9,6 +9,7 @@ import com.estsoft.ormi_p2.dto.UpdatePostRequest;
 import com.estsoft.ormi_p2.service.CommentService;
 import com.estsoft.ormi_p2.service.PostLikeService;
 import com.estsoft.ormi_p2.service.PostService;
+import org.springframework.http.MediaType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -54,6 +55,7 @@ public class PostPageController {
             }
             model.addAttribute("post", new PostViewResponse(post));
         }
+
         return "newPost";
     }
 
@@ -62,23 +64,22 @@ public class PostPageController {
     public String showPostList(Model model) {
         List<Post> posts = postService.getAllPosts();
         model.addAttribute("posts", posts);
-
         return "postList";
     }
 
-    // 게시글 저장 (POST) - 로그인 사용자 연동
-    @PostMapping("/new-post")
+    // 게시글 저장 (POST)
+    @PostMapping(value = "/new-post", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String savePost(@RequestParam String title,
                            @RequestParam String content,
                            @RequestParam String category,
                            @RequestParam String difficulty,
                            @RequestParam(required = false) String tagString,
                            @RequestParam(required = false) MultipartFile image,
-                           @AuthenticationPrincipal User user,  // 로그인 사용자 주입
+                           @AuthenticationPrincipal User user,
                            Model model) {
         try {
             Post savedPost = postService.savePost(title, content, category, difficulty, tagString, image, user);
-            return "redirect:/posts"; // 게시글 목록 페이지로 이동
+            return "redirect:/posts";
         } catch (Exception e) {
             model.addAttribute("error", "게시글 저장에 실패했습니다.");
             return "newPost";
@@ -145,11 +146,11 @@ public class PostPageController {
     @DeleteMapping("/posts/{postId}")
     public String deletePost(@PathVariable Long postId) {
         postService.deletePost(postId);
-        return "redirect:/posts";  // 게시글 목록 페이지로 리다이렉트
+        return "redirect:/posts";
     }
 
     // 게시글 수정 페이지 이동
-    @GetMapping("/posts/edit/{postId}")
+    @GetMapping("/new-post/{postId}")
     public String editPost(@PathVariable Long postId,
                            Model model,
                            @AuthenticationPrincipal User user) throws AccessDeniedException {
@@ -169,8 +170,21 @@ public class PostPageController {
     }
 
     @PutMapping("/posts/{postId}")
-    public String updatePost(@PathVariable Long postId, @RequestBody UpdatePostRequest updatePostRequest) {
-        postService.updatePost(postId, updatePostRequest);
+    public String updatePost(@PathVariable Long postId,
+                             @ModelAttribute UpdatePostRequest updatePostRequest, // 폼 데이터와 파일을 함께 바인딩
+                             @RequestParam(value = "image", required = false) MultipartFile image,
+                             @AuthenticationPrincipal User user) throws AccessDeniedException {
+        Post post = postService.getPost(postId);
+
+        // 수정 권한 체크
+        if (!post.getAuthor().getUserId().equals(user.getUserId())) {
+            throw new AccessDeniedException("이 글을 수정할 권한이 없습니다.");
+        }
+
+        // 게시글 업데이트 서비스 호출
+        postService.updatePost(postId, updatePostRequest, image);
+
+        // 수정된 게시글 페이지로 리다이렉트
         return "redirect:/posts/" + postId;
     }
 
@@ -180,7 +194,6 @@ public class PostPageController {
                              @AuthenticationPrincipal User user) throws AccessDeniedException {
         Post post = postService.getPost(postId);
 
-        // 작성자 확인
         if (!post.getAuthor().getUserId().equals(user.getUserId())) {
             throw new AccessDeniedException("이 글을 삭제할 권한이 없습니다.");
         }

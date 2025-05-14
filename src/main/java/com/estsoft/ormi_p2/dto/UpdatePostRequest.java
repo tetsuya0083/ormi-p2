@@ -8,6 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -20,29 +24,30 @@ public class UpdatePostRequest {
     private String content;
     private String category;
     private String difficulty;
-    private List<String> tags;
+    private List<String> tags = new ArrayList<>();;
     private Boolean isPublic;
-    private List<String> imageUrl;
+    private List<String> imageUrl = new ArrayList<>();;
     private String representImageUrl;
+    private MultipartFile image;
 
     public UpdatePostRequest(Post post) {
         this.id = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
-        this.category = post.getCategory().name(); // enum → String
+        this.category = post.getCategory().name();
         this.difficulty = post.getDifficulty() != null ? post.getDifficulty().name() : null;
 
         this.tags = post.getTags() != null
                 ? post.getTags().stream()
                 .map(Tag::getName)
                 .toList()
-                : null;
+                : Collections.emptyList();
 
         this.imageUrl = post.getImages() != null
                 ? post.getImages().stream()
                 .map(PostImage::getImageUrl)
                 .toList()
-                : null;
+                : Collections.emptyList();
 
         this.representImageUrl = post.getImages() != null && !post.getImages().isEmpty()
                 ? post.getImages().get(0).getImageUrl()

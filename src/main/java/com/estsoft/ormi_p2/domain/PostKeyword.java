@@ -30,7 +30,6 @@ public class PostKeyword {
     @JoinColumn(name = "tag_id", nullable = false)
     private Tag tag;
 
-    // 생성자
     public PostKeyword(Post post, Tag tag, Long keywordId) {
         this.post = post;
         this.tag = tag;

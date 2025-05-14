@@ -3,8 +3,6 @@ package com.estsoft.ormi_p2.service;
 import com.estsoft.ormi_p2.domain.*;
 import com.estsoft.ormi_p2.dto.AddPostRequest;
 import com.estsoft.ormi_p2.dto.PostViewResponse;
-import com.estsoft.ormi_p2.dto.PostResponse;
-import com.estsoft.ormi_p2.dto.PostViewDto;
 import com.estsoft.ormi_p2.dto.UpdatePostRequest;
 import com.estsoft.ormi_p2.exception.NotExistsIdException;
 import com.estsoft.ormi_p2.repository.*;
@@ -133,6 +131,23 @@ public class PostService {
         }
     }
 
+    // 게시글 이미지 저장
+    private void savePostImage(Post savedPost, String imageUrl, boolean isRepresentative) {
+        // 이미지가 없을 경우 기본 이미지 사용
+        if (imageUrl == null || imageUrl.isEmpty()) {
+            imageUrl = "/img/default-thumbnail.jpg"; // 기본 이미지 경로
+        }
+
+        // 저장할 이미지 정보 설정
+        PostImage postImage = PostImage.builder()
+                .post(savedPost)
+                .imageUrl(imageUrl)
+                .representImageYn(isRepresentative)
+                .build();
+
+        postImageRepository.save(postImage);
+    }
+
     // MultipartFile 이미지 저장
     private void savePostImage(Post savedPost, MultipartFile image, boolean isRepresentative) {
         // 이미지가 없을 경우 기본 이미지 사용
@@ -171,7 +186,7 @@ public class PostService {
     }
 
     public List<Post> getAllPosts() {
-        return postRepository.findAll();
+        return postRepository.findAllByOrderByCreatedAtDesc();
     }
 
     public List<Post> getPostsByUser(User user) {
@@ -212,7 +227,7 @@ public class PostService {
 
     // 게시글 수정
     @Transactional
-    public Post updatePost(Long id, UpdatePostRequest request) {
+    public Post updatePost(Long id, UpdatePostRequest request, MultipartFile image) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new NotExistsIdException(id)); // 500 Error
 
@@ -245,6 +260,7 @@ public class PostService {
             post.setImages(newImages.get(0).getUrl()); // 첫 번째 이미지를 대표 이미지로 설정
         }
 
+
         // 변경된 게시글 저장
         return postRepository.save(post);
     }
@@ -257,6 +273,5 @@ public class PostService {
     public Page<Post> getPostsByCategory(String category, PageRequest pageRequest) {
         return postRepository.findByCategory(category, pageRequest);  // 카테고리 필터링
     }
-
 
 }

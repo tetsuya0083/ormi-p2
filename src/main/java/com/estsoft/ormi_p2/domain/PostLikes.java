@@ -22,7 +22,7 @@ public class PostLikes {
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false) // user_id가 null이 아니어야 한다는 제약을 추가
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(name = "liked_at")

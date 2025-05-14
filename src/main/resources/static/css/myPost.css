@@ -1,0 +1,44 @@
+.search-filter {
+    display: flex;
+    gap: 20px;
+    margin: 20px 0;
+}
+.search-filter input, .search-filter select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    min-width: 200px;
+}
+.post-stats, .card-tags {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-top: 10px;
+}
+.profile-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.profile-img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.pagination ul {
+    list-style: none;
+    display: flex;
+    gap: 8px;
+}
+.pagination a {
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    color: black;
+    border-radius: 4px;
+}
+.pagination a.active {
+    background: #2563eb;
+    color: white;
+    font-weight: bold;
+}

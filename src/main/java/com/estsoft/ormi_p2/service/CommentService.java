@@ -94,8 +94,8 @@ public class CommentService {
         }
 
         // 댓글 수정
-        comment.setContent(request.getContent());  // 댓글 내용 수정
-        comment.setUpdatedAt(LocalDateTime.now());  // 수정 시간 갱신
+        comment.setContent(request.getContent());
+        comment.setUpdatedAt(LocalDateTime.now());
 
         // 수정된 댓글 저장
         return commentRepository.save(comment);
