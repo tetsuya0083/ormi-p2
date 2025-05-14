@@ -242,24 +242,20 @@ public class PostService {
                 .collect(Collectors.toList());
         */
 
-        try {
-            post.getImages().clear();
+        post.getImages().clear();
 
-            String filename = UUID.randomUUID() + "_" + image.getOriginalFilename();
-            Path uploadDir = Paths.get(System.getProperty("user.dir"), "uploads"); // 현재 프로젝트 기준 절대 경로
-            Files.createDirectories(uploadDir);
+        String filename = UUID.randomUUID() + "_" + image.getOriginalFilename();
+        Path uploadDir = Paths.get(System.getProperty("user.dir"), "uploads"); // 현재 프로젝트 기준 절대 경로
+        Files.createDirectories(uploadDir);
 
-            // 클라이언트가 접근할 수 있는 URL 생성
-            Path fullPath = uploadDir.resolve(filename);  // uploads/파일명 전체 경로
-            image.transferTo(fullPath.toFile());   // 절대 경로 넘김!
+        // 클라이언트가 접근할 수 있는 URL 생성
+        Path fullPath = uploadDir.resolve(filename);  // uploads/파일명 전체 경로
+        image.transferTo(fullPath.toFile());   // 절대 경로 넘김!
 
-            String imageUrl = "/images/" + filename;
-            PostImage postImage = new PostImage(imageUrl, post);
-            postImage.setPost(post);
-            post.getImages().add(postImage);
-        } catch (IOException e) {
-            throw new RuntimeException("이미지 업로드 실패", e);
-        }
+        String imageUrl = "/images/" + filename;
+        PostImage postImage = new PostImage(imageUrl, post);
+        postImage.setPost(post);
+        post.getImages().add(postImage);
 
 //        post.getImages().addAll(imageUrl);
 
