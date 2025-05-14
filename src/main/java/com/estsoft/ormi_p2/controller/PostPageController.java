@@ -168,11 +168,12 @@ public class PostPageController {
         return "newPost";
     }
 
-    @PutMapping("/posts/{postId}")
-    public String updatePost(@PathVariable Long postId, @RequestBody UpdatePostRequest updatePostRequest) {
-        postService.updatePost(postId, updatePostRequest);
-        return "redirect:/posts/" + postId;
-    }
+    // PUT /posts/{postId}/edit /js/postDetail.js
+//    @PutMapping("/posts/{postId}")
+//    public String updatePost(@PathVariable Long postId, @RequestBody UpdatePostRequest updatePostRequest) {
+//        postService.updatePost(postId, updatePostRequest);
+//        return "redirect:/posts/" + postId;
+//    }
 
     // 게시글 삭제 (특정 권한 체크)
     @GetMapping("/posts/delete/{postId}")

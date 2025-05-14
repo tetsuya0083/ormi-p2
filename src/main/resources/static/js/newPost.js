@@ -181,22 +181,22 @@ if (modifyButton) {
         formData.append('title', document.getElementById('title').value);
         formData.append('content', document.getElementById('summernote').value);
         formData.append('category', document.getElementById('category').value);  // 카테고리 선택값
-        formData.append('imageInput', document.getElementById('imageInput').files[0]);  // 대표 이미지 파일
+        formData.append('image', document.getElementById('imageInput').files[0]);  // 대표 이미지 파일
 
         // Fetch API를 사용하여 PUT 요청을 보냄
         fetch(`/api/posts/${postId}`, {
-            method: 'PUT',
+            method: 'POST',
             body: formData,
         }).then(response => {
             if (response.ok) {
                 alert('수정 완료되었습니다');
                 location.replace(`/posts/${postId}`);  // 수정된 게시글 상세 페이지로 이동
             } else {
-                alert('수정에 실패했습니다');
+                alert('서버 오류가 발생했습니다.');
             }
         }).catch(error => {
             console.error('Error:', error);
-            alert('서버 오류가 발생했습니다.');
+            alert('수정에 실패했습니다');
         });
     });
 }

@@ -64,6 +64,7 @@ public class PostController {
                 .collect(Collectors.toList());
     }
 
+    // 게시글 수정 페이지로 이동
     @GetMapping("/new-post")
     public String editPost(@RequestParam Long postId, Model model) {
         Post post = postService.getPost(postId);
@@ -71,12 +72,21 @@ public class PostController {
         return "newPost";
     }
 
-    @PutMapping("/{postId}")
-    public ResponseEntity<PostResponse> updatePost(@PathVariable("postId") Long postId,
-                                                   @RequestBody UpdatePostRequest request) {
-        Post post = postService.updatePost(postId, request);
-        PostResponse response = post.toDto();
-        return ResponseEntity.ok(response);
+    @PostMapping("/{postId}")
+    public ResponseEntity<Void> updatePost(@PathVariable("postId") Long postId,
+                                           @ModelAttribute UpdatePostRequest request,
+                                           @RequestParam("image") MultipartFile image) {
+        try {
+            postService.updatePost(postId, request, image);
+
+        } catch (IOException e) {
+            throw new RuntimeException("게시글 수정 실패", e);
+        }
+
+//        PostResponse response = post.toDto();
+//        return ResponseEntity.ok(response);
+
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{postId}")

@@ -36,7 +36,7 @@
             <form th:action="@{/new-post}" th:object="${post}" method="post" enctype="multipart/form-data">
 
 <!--                <input type="hidden" name="_csrf" value="${_csrf.token}" />-->
-                <input type="hidden" id="postId" th:value="${post.id}" />
+                <input type="hidden" id="post-id" th:value="${post.id}" />
 
                 <div class="mb-3">
                     <label for="title" class="form-label">제목</label>
@@ -73,7 +73,7 @@
                 </div>
 
 
-                <div class="mb-3" id="difficulty-section" th:attr="style=${post.category?.displayName() == 'SHARE'} ? '' : 'display:none;'">
+                <div class="mb-3" id="difficulty-section" th:attr="style=${post.category?.toString() == 'SHARE'} ? '' : 'display:none;'">
 <!--                <div class="mb-3" id="difficulty-section" th:style="${(post.category != null and post.category.toString() == 'SHARE') ? '' : 'display:none;'}">-->
                     <label class="form-label d-block">난이도</label>
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">

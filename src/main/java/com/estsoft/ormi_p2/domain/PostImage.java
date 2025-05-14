@@ -29,6 +29,15 @@ public class PostImage {
     private String imageUrl;
 
     public PostImage(String url, Post post) {
+        this.imageUrl = url;
+        this.setPost(post);
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+        if (!post.getImages().contains(this)) {
+            post.getImages().add(this);
+        }
     }
 
     public static PostImage of(Post post, String imageUrl, boolean isRepresentative) {

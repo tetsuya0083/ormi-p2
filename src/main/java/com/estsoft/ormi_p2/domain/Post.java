@@ -73,7 +73,7 @@ public class Post {
     )
     private List<Tag> tags = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostImage> images;
 
     @PrePersist

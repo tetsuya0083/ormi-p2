@@ -33,6 +33,9 @@ public class PostKeyword {
     // 생성자
     public PostKeyword(Post post, Tag tag, Long keywordId) {
         this.post = post;
+        if (!post.getPostKeywords().contains(this)) {
+            post.getPostKeywords().add(this);
+        }
         this.tag = tag;
         this.keywordId = keywordId;
     }

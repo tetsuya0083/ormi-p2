@@ -210,12 +210,14 @@ public class PostService {
         postRepository.save(post);
     }
 
-    // 게시글 수정
+    // 게시글 수정 메소드 PUT /api/posts/{postId} 에서 넘어옴
     @Transactional
-    public Post updatePost(Long id, UpdatePostRequest request) {
-        Post post = postRepository.findById(id)
+    public Post updatePost(Long id, UpdatePostRequest request, MultipartFile image)
+    throws IOException {
+        Post post = postRepository.findById(id)     //  이 시점에 post는 영속 상태
                 .orElseThrow(() -> new NotExistsIdException(id)); // 500 Error
 
+        // 새로운 title, content로 교체
         post.update(request.getTitle(), request.getContent());
 
         post.setCategory(Category.valueOf(request.getCategory())); // 카테고리 업데이트
@@ -223,6 +225,7 @@ public class PostService {
                 request.getDifficulty() != null ? Difficulty.valueOf(request.getDifficulty()) : null
         );
 
+        /*
         List<PostKeyword> newPostKeywords = request.getTags().stream()
                 .map(tagName -> {
                     Tag tag = tagRepository.findByTag(tagName)
@@ -237,16 +240,36 @@ public class PostService {
         List<PostImage> newImages = request.getImageUrl().stream()
                 .map(url -> new PostImage(url, post)) // 새 이미지를 생성
                 .collect(Collectors.toList());
+        */
 
-        post.getImages().clear();
-        post.getImages().addAll(newImages);
+        try {
+            post.getImages().clear();
 
-        if (!newImages.isEmpty()) {
-            post.setImages(newImages.get(0).getUrl()); // 첫 번째 이미지를 대표 이미지로 설정
+            String filename = UUID.randomUUID() + "_" + image.getOriginalFilename();
+            Path uploadDir = Paths.get(System.getProperty("user.dir"), "uploads"); // 현재 프로젝트 기준 절대 경로
+            Files.createDirectories(uploadDir);
+
+            // 클라이언트가 접근할 수 있는 URL 생성
+            Path fullPath = uploadDir.resolve(filename);  // uploads/파일명 전체 경로
+            image.transferTo(fullPath.toFile());   // 절대 경로 넘김!
+
+            String imageUrl = "/images/" + filename;
+            PostImage postImage = new PostImage(imageUrl, post);
+            postImage.setPost(post);
+            post.getImages().add(postImage);
+        } catch (IOException e) {
+            throw new RuntimeException("이미지 업로드 실패", e);
         }
 
+//        post.getImages().addAll(imageUrl);
+
+//        if (!newImages.isEmpty()) {
+//            post.setImages(newImages.get(0).getUrl()); // 첫 번째 이미지를 대표 이미지로 설정
+//        }
+
         // 변경된 게시글 저장
-        return postRepository.save(post);
+        //return postRepository.save(post);
+        return post;  // 이 return은 영속 상태 객체
     }
 
     // 게시글 삭제

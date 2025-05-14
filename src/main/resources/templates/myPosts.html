@@ -70,7 +70,7 @@
                         <span>이전</span>
                     </a>
                 </li>
-                <li th:each="page: ${#numbers.sequence(1, (paging.totalPages))}"
+                <li th:each="page: ${#numbers.sequence(1, (paging.totalPages)-1)}"
                     th:if="${page >= (paging.number)-5 and page <= paging.number+5}"
                     th:classappend="${page == paging.number} ? 'active'"
                     class="page-item">
